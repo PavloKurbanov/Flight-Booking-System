@@ -11,12 +11,12 @@ public class Flight implements Comparable<Flight> {
     private final Integer totalSeats;
     private Integer availableSeats;
 
-    private Flight(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats, Integer availableSeats) {
+    public Flight(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats) {
         if (departureCity == null || departureCity.isBlank()) {
             throw new IllegalArgumentException("Введіть коректне місто відправлення!");
         }
         if (arrivalCity == null || arrivalCity.isBlank()) {
-            throw new IllegalArgumentException("Введіть коректне місто відправлення!");
+            throw new IllegalArgumentException("Введіть коректне місто прибуття!");
         }
         if (departureTime == null) {
             throw new IllegalArgumentException("Введіть коректний час вильоту!");
@@ -24,26 +24,12 @@ public class Flight implements Comparable<Flight> {
         if (totalSeats == null || totalSeats <= 10) {
             throw new IllegalArgumentException("Кількість мість не може бути менше 10!");
         }
-        if (availableSeats == null || availableSeats < 0) {
-            throw new IllegalArgumentException("Кількість вільних мість не може бути менше 0!");
-        }
         this.id = id;
         this.departureCity = departureCity;
         this.arrivalCity = arrivalCity;
         this.departureTime = departureTime;
         this.totalSeats = totalSeats;
-        this.availableSeats = availableSeats;
-    }
-
-    public static Flight createFlight(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats) {
-        if (departureTime != null && departureTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Новий рейс не може бути в минулому!");
-        }
-        return new Flight(id, departureCity, arrivalCity, departureTime, totalSeats, totalSeats);
-    }
-
-    public static Flight restoreFromStorage(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats, Integer availableSeats) {
-        return new Flight(id, departureCity, arrivalCity, departureTime, totalSeats, availableSeats);
+        this.availableSeats = totalSeats;
     }
 
     public Long getId() {

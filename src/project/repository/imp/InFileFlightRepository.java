@@ -2,7 +2,6 @@ package project.repository.imp;
 
 import project.entity.Flight;
 import project.repository.FlightRepository;
-import project.util.DateFormatter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,8 +51,8 @@ public class InFileFlightRepository implements FlightRepository {
     }
 
     @Override
-    public Flight findById(Long aLong) {
-        return flightMap.get(aLong);
+    public Flight findById(Integer flightId) {
+        return flightMap.get(flightId);
     }
 
     @Override
@@ -91,11 +90,12 @@ public class InFileFlightRepository implements FlightRepository {
             Integer totalSeats = Integer.parseInt(split[4]);
             Integer availableSeats = Integer.parseInt(split[5]);
 
-            Flight newFlight = Flight.restoreFromStorage(id, departureCity, arrivalCity, departureTime, totalSeats, availableSeats);
+            Flight newFlight = new Flight(id, departureCity, arrivalCity, departureTime, totalSeats);
+            newFlight.setAvailableSeats(availableSeats);
             flightMap.put(id, newFlight);
 
             if (id >= this.flightId) {
-                this.flightId = id + 1L;
+                this.flightId = id + 1;
             }
         }
     }

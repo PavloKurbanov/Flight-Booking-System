@@ -3,12 +3,12 @@ package project.entity;
 import java.util.Objects;
 
 public class Ticket {
-    private Long id;
-    private final Long passengerId;
-    private final Long flightId;
+    private Integer id;
+    private final Integer passengerId;
+    private final Integer flightId;
     private final Integer price;
 
-    public Ticket(Long id, Long passengerId, Long flightId, Integer price) {
+    public Ticket(Integer id, Integer passengerId, Integer flightId, Integer price) {
         if (passengerId == null) {
             throw new IllegalArgumentException("Введіть коректне ID пасажира!");
         }
@@ -24,19 +24,19 @@ public class Ticket {
         this.price = price;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getPassengerId() {
+    public Integer getPassengerId() {
         return passengerId;
     }
 
-    public Long getFlightId() {
+    public Integer getFlightId() {
         return flightId;
     }
 
