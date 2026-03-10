@@ -1,6 +1,6 @@
-package project.util;
+package util;
 
-import project.entity.Flight;
+import entity.Flight;
 
 import java.util.List;
 

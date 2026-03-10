@@ -1,7 +1,7 @@
-package project.repository.imp;
+package repository.impl;
 
-import project.entity.Ticket;
-import project.repository.TicketRepository;
+import entity.Ticket;
+import repository.TicketRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;

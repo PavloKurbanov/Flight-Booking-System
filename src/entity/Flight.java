@@ -1,4 +1,4 @@
-package project.entity;
+package entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -84,7 +84,7 @@ public class Flight implements Comparable<Flight> {
     @Override
     public String toString() {
         return String.format(
-                "Flight #%d | %s → %s | Date: %s | Seats: %d/%d",
+                "entity.Flight #%d | %s → %s | Date: %s | Seats: %d/%d",
                 id,
                 departureCity,
                 arrivalCity,

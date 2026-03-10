@@ -1,7 +1,7 @@
-package project.repository.imp;
+package repository.impl;
 
-import project.entity.Flight;
-import project.repository.FlightRepository;
+import entity.Flight;
+import repository.FlightRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;

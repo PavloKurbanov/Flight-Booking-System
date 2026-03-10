@@ -1,6 +1,6 @@
-package project.util;
+package util;
 
-import project.entity.Passenger;
+import entity.Passenger;
 
 import java.util.List;
 

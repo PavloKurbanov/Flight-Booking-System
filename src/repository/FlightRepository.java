@@ -1,6 +1,6 @@
-package project.repository;
+package repository;
 
-import project.entity.Flight;
+import entity.Flight;
 
 public interface FlightRepository extends CrudRepository<Flight, Long> {
 }

@@ -1,7 +1,7 @@
-package project.repository.imp;
+package repository.impl;
 
-import project.entity.Passenger;
-import project.repository.PassengerRepository;
+import entity.Passenger;
+import repository.PassengerRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;

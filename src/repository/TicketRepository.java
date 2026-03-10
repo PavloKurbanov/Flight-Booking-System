@@ -1,6 +1,6 @@
-package project.repository;
+package repository;
 
-import project.entity.Ticket;
+import entity.Ticket;
 
 public interface TicketRepository extends CrudRepository<Ticket, Long>{
 }
