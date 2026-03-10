@@ -3,11 +3,11 @@ package project.entity;
 import java.util.Objects;
 
 public class Passenger implements Comparable<Passenger> {
-    private Integer id;
+    private Long id;
     private final String firstName;
     private final String lastName;
 
-    public Passenger(Integer id, String firstName, String lastName) {
+    public Passenger(Long id, String firstName, String lastName) {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("Введіть коректне ім'я!");
         }
@@ -19,11 +19,11 @@ public class Passenger implements Comparable<Passenger> {
         this.lastName = lastName;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

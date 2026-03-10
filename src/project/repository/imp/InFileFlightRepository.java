@@ -51,7 +51,7 @@ public class InFileFlightRepository implements FlightRepository {
     }
 
     @Override
-    public Flight findById(Integer flightId) {
+    public Flight findById(Long flightId) {
         return flightMap.get(flightId);
     }
 
