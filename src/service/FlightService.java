@@ -4,6 +4,7 @@ import entity.Flight;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 public interface FlightService {
@@ -18,4 +19,6 @@ public interface FlightService {
     List<Flight> findByDate(LocalDate date);
 
     void reserveSeats(Long flightId, int seatsToBook);
+
+    List<Flight> getSortedFlights(Comparator<Flight> comparator);
 }
