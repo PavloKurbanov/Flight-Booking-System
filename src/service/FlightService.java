@@ -13,7 +13,9 @@ public interface FlightService {
 
     List<Flight> getAll();
 
-    List<Flight> findFlightsForGroup(String departureCity, String arrivalCity, Integer availableSeats);
+    List<Flight> findFlightsForGroup(String departureCity, String arrivalCity, Integer requiredSeats);
 
     List<Flight> findByDate(LocalDate date);
+
+    void reserveSeats(Long flightId, int seatsToBook);
 }
