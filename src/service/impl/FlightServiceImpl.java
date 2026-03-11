@@ -47,7 +47,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight findById(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("Не має такого ID!");
+            throw new IllegalArgumentException("ID не може бути null!");
         }
         return flightRepository.findById(id);
     }
@@ -81,6 +81,9 @@ public class FlightServiceImpl implements FlightService {
             throw new IllegalArgumentException("Кількість місць має бути більшою за нуль!");
         }
         Flight flight = findById(flightId);
+        if(flight == null){
+            throw new IllegalArgumentException("Не має такого ID!");
+        }
         if (flight.getAvailableSeats() >= seatsToBook) {
             int seats = flight.getAvailableSeats() - seatsToBook;
             flight.setAvailableSeats(seats);
