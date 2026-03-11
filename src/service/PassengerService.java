@@ -11,5 +11,5 @@ public interface PassengerService {
 
     List<Passenger> getAll();
 
-    Passenger findByFistAndLastName(String firstName, String LastName);
+    List<Passenger> findByFistAndLastName(String firstName, String LastName);
 }

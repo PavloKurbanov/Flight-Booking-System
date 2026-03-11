@@ -19,6 +19,15 @@ public class InFileTicketRepository implements TicketRepository {
     public InFileTicketRepository(Path filePath) {
         this.filePath = filePath;
         this.ticketMap = new HashMap<>();
+        try {
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
+            } else {
+                loadFile();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

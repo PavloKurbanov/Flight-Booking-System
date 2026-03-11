@@ -2,7 +2,7 @@ package entity;
 
 import java.util.Objects;
 
-public class Ticket {
+public class Ticket{
     private Long id;
     private final Long passengerId;
     private final Long flightId;

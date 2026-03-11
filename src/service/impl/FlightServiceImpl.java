@@ -6,11 +6,9 @@ import service.FlightService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class FlightServiceImpl implements FlightService {
@@ -22,27 +20,29 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Flight save(Flight flight) {
-        // Перевірка хідних даних на null
         if (flight == null) {
             throw new IllegalArgumentException("Квиток не може бути null!");
         }
-        // Перевірка чи дата створення не є в минулому
         if (flight.getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Дата не може бути в минулому!");
         }
-        // Перевірка на унікальність
         List<Flight> flights = getAll();
         boolean isDuplicate = flights
                 .stream()
                 .anyMatch(existingFlight -> isSameRouteAndTime(existingFlight, flight));
-        // Якщо такий рейс знайдено, помилка
+
         if (isDuplicate) {
             throw new IllegalArgumentException("Такий рейс вже існує!");
         }
-        // Якщо ввсе добре, зберігаємо та повертаємо об'єкт
         flightRepository.save(flight);
         return flight;
     }
+    /*
+    1. Перевірки (if): Відкидають порожні об'єкти та рейси з минулого, щоб не навантажувати систему.
+    2. getAll(): Витягує всі існуючі рейси з бази.
+    3. stream().anyMatch(...): Запускає перевірку кожного існуючого рейсу з новим. Як тільки знаходить хоча б один повний збіг — миттєво зупиняється і повертає true (Коротке замикання).
+    4. save(): Якщо дублікатів немає, фізично записує новий рейс у базу.
+    */
 
     @Override
     public Flight findById(Long id) {
@@ -51,6 +51,10 @@ public class FlightServiceImpl implements FlightService {
         }
         return flightRepository.findById(id);
     }
+    /*
+    1. Перевірка: Захищає від передачі порожнього ID.
+    2. findById(): Звертається до бази і повертає знайдений рейс (або null, якщо такого немає).
+    */
 
     @Override
     public List<Flight> getAll() {
@@ -64,16 +68,31 @@ public class FlightServiceImpl implements FlightService {
                 .filter(flight -> flight.getDepartureCity().equalsIgnoreCase(departureCity))
                 .filter(flight -> flight.getArrivalCity().equalsIgnoreCase(arrivalCity))
                 .filter(flight -> flight.getAvailableSeats() >= requiredSeats)
-                .sorted().collect(Collectors.toList());
+                .sorted()
+                .collect(Collectors.toList());
     }
+    /*
+    1. getAll(): Бере всі рейси з бази.
+    2. stream(): Відкриває "конвеєр" для обробки.
+    3. filter(...) x3: Відсіює рейси з іншими містами та ті, де не вистачає місць. Працює по черзі: якщо перша умова не підійшла, інші навіть не перевіряються.
+    4. sorted(): Вишиковує рейси, що залишилися, за часом вильоту.
+    5. collect(): Збирає результат у новий список і віддає клієнту.
+    */
 
     @Override
     public List<Flight> findByDate(LocalDate date) {
         if (Objects.isNull(date)) {
-            throw new IllegalArgumentException("Двтв не може бути null!");
+            throw new IllegalArgumentException("Дата не може бути null!");
         }
-        return getAll().stream().filter(flight -> flight.getDepartureTime().toLocalDate().equals(date)).sorted().collect(Collectors.toList());
+        return getAll().stream()
+                .filter(flight -> flight.getDepartureTime().toLocalDate().equals(date))
+                .sorted()
+                .collect(Collectors.toList());
     }
+    /*
+    1. filter(): Бере час вильоту кожного рейсу (LocalDateTime), відрізає від нього години/хвилини (.toLocalDate()) і порівнює з шуканою датою.
+    2. sorted() + collect(): Сортує за часом і збирає в список.
+    */
 
     @Override
     public void reserveSeats(Long flightId, int seatsToBook) {
@@ -92,6 +111,12 @@ public class FlightServiceImpl implements FlightService {
         }
         throw new IllegalArgumentException("Не достатньо вільних місць!");
     }
+    /*
+    1. Охоронці: Перевіряють, чи адекватна кількість місць (>0) та чи взагалі існує такий рейс у базі.
+    2. Бізнес-логіка (if): Якщо вільних місць вистачає, віднімаємо потрібну кількість і міняємо стан літака.
+    3. Транзакція: save() фіксує нову кількість місць у базі даних.
+    4. Виняток: Якщо місць менше, ніж просять, транзакція відміняється і кидається помилка.
+    */
 
     private boolean isSameRouteAndTime(Flight existingFlight, Flight newFlight) {
         return newFlight.getDepartureCity().equalsIgnoreCase(existingFlight.getDepartureCity())
@@ -102,7 +127,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<Flight> getSortedFlights(Comparator<Flight> comparator) {
         if (Objects.isNull(comparator)) {
-            throw new IllegalArgumentException("Тип сортування не може бутит null!");
+            throw new IllegalArgumentException("Тип сортування не може бути null!");
         }
         return getAll().stream().sorted(comparator).collect(Collectors.toList());
     }
