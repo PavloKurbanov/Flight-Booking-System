@@ -19,5 +19,7 @@ public interface FlightService {
 
     void reserveSeats(Long flightId, int seatsToBook);
 
+    void returnSeats(Long flightId, int seatsToBook);
+
     List<Flight> getSortedFlights(Comparator<Flight> comparator);
 }

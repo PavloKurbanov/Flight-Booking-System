@@ -99,12 +99,14 @@ public class FlightServiceImpl implements FlightService {
         if(seatsToBook <= 0){
             throw new IllegalArgumentException("Кількість місць має бути більшою за нуль!");
         }
+
         Flight flight = findById(flightId);
         if(flight == null){
             throw new IllegalArgumentException("Не має такого ID!");
         }
+
         if (flight.getAvailableSeats() >= seatsToBook) {
-            int seats = flight.getAvailableSeats() - seatsToBook;
+            int seats = flight.getAvailableSeats() + seatsToBook;
             flight.setAvailableSeats(seats);
             flightRepository.save(flight);
             return;
@@ -117,6 +119,20 @@ public class FlightServiceImpl implements FlightService {
     3. Транзакція: save() фіксує нову кількість місць у базі даних.
     4. Виняток: Якщо місць менше, ніж просять, транзакція відміняється і кидається помилка.
     */
+
+    @Override
+    public void returnSeats(Long flightId, int seatsToBook) {
+        Flight flight = findById(flightId);
+        if(flight == null){
+            throw new IllegalArgumentException("Не має такого ID!");
+        }
+        if (flight.getAvailableSeats() >= seatsToBook) {
+            int seats = flight.getAvailableSeats() - seatsToBook;
+            flight.setAvailableSeats(seats);
+            flightRepository.save(flight);
+            return;
+        }
+    }
 
     private boolean isSameRouteAndTime(Flight existingFlight, Flight newFlight) {
         return newFlight.getDepartureCity().equalsIgnoreCase(existingFlight.getDepartureCity())

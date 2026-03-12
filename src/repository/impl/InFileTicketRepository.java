@@ -47,6 +47,16 @@ public class InFileTicketRepository implements TicketRepository {
     }
 
     @Override
+    public void deleteById(Long ticketId) {
+        ticketMap.remove(ticketId);
+        try {
+            saveFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Ticket findById(Long aLong) {
         return ticketMap.get(aLong);
     }
