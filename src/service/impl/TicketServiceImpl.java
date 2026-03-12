@@ -44,7 +44,7 @@ public class TicketServiceImpl implements TicketService {
         }
 
         flightService.reserveSeats(flightId, 1);
-        ticketRepository.save(new Ticket(0L, passengerId, flightId, price));
+        ticketRepository.save(new Ticket(null, passengerId, flightId, price));
     }
 
     @Override

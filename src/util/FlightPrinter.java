@@ -19,7 +19,7 @@ public class FlightPrinter {
                     f.getId(),
                     f.getDepartureCity(),
                     f.getArrivalCity(),
-                    DateFormatter.format(f.getDepartureTime()),
+                    DateFormatter.formatLocalDateTime(f.getDepartureTime()),
                     f.getAvailableSeats(),
                     f.getTotalSeats()
             );
