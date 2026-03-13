@@ -1,7 +1,6 @@
 package ui;
 
 import entity.Flight;
-import io.InputOutput;
 import service.FlightService;
 import ui.command.Command;
 import util.FlightPrinter;
@@ -28,8 +27,6 @@ public class ShowAllFlight implements Command {
             System.out.println("На даний момент не має жодного рейсу");
             return;
         }
-
-        System.out.println("--- УСІ РЕЕЙСИ ---");
         FlightPrinter.printFlights(flightList);
     }
 }

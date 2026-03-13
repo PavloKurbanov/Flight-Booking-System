@@ -34,12 +34,23 @@ public class InputOutput {
         LocalDate localDate = null;
 
         while (localDate == null) {
-            try{
+            try {
                 localDate = DateFormatter.parse(scanner.nextLine());
             } catch (IllegalArgumentException | DateTimeParseException e) {
                 System.err.println("ПОМИЛКА: Невірний формат дати. " + e.getMessage());
             }
         }
         return localDate;
+    }
+
+    public Long readLong(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Long.parseLong(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Будь ласка, введіть число!");
+            }
+        }
     }
 }
