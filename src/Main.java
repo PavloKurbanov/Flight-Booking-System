@@ -1,24 +1,36 @@
 import entity.Flight;
+import io.InputOutput;
 import repository.FlightRepository;
+import repository.PassengerRepository;
+import repository.TicketRepository;
 import repository.impl.InFileFlightRepository;
+import repository.impl.InFilePassengerRepository;
+import repository.impl.InFileTicketRepository;
+import service.FlightService;
+import service.PassengerService;
+import service.TicketService;
+import service.impl.FlightServiceImpl;
+import service.impl.PassengerServiceImpl;
+import service.impl.TicketServiceImpl;
+import ui.menu.MainMenu;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 void main() {
-    Path file = Paths.get("entity.Flight.txt");
-    FlightRepository flightRepository = new InFileFlightRepository(file);
-    Flight flight = new Flight(null, "Миколаїв", "Львів", LocalDateTime.of(2026, 3, 12, 2,0, 0), 120);
-    Flight flight2 = new Flight(null, "Миколаїв", "Львів", LocalDateTime.of(2026, 3, 12, 2,0, 0), 120);
-    Flight flight3 = new Flight(null, "Миколаїв", "Львів", LocalDateTime.of(2026, 3, 12, 2,0, 0), 120);
+    Path flight = Paths.get("flight.txt");
+    Path ticket = Paths.get("ticket.txt");
+    Path passenger = Paths.get("passenger.txt");
 
-    flightRepository.save(flight2);
-    flightRepository.save(flight);
-    flight3.setAvailableSeats(100);
-    flightRepository.save(flight3);
+    InputOutput inputOutput = new InputOutput();
+    FlightRepository flightRepository = new InFileFlightRepository(flight);
+    TicketRepository ticketRepository = new InFileTicketRepository(ticket);
+    PassengerRepository passengerRepository = new InFilePassengerRepository(passenger);
 
+    FlightService flightService = new FlightServiceImpl(flightRepository);
+    PassengerService passengerService = new PassengerServiceImpl(passengerRepository);
+    TicketService ticketService = new TicketServiceImpl(flightService, passengerService, ticketRepository);
 
-    List<Flight> all = flightRepository.getAll();
-    for (Flight flight1 : all) {
-        System.out.println(flight1);
-    }
+    MainMenu mainMenu = new MainMenu(inputOutput, flightService, passengerService, ticketService);
+    mainMenu.showMenu();
 }

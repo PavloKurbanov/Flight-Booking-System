@@ -1,4 +1,4 @@
-package ui;
+package ui.showCommand;
 
 import entity.Passenger;
 import service.PassengerService;
@@ -16,7 +16,7 @@ public class ShowAllPassenger implements Command {
 
     @Override
     public String choice() {
-        return "";
+        return "2";
     }
 
     @Override

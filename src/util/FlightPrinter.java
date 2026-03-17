@@ -6,7 +6,7 @@ import java.util.List;
 
 public class FlightPrinter {
     public static void printFlights(List<Flight> flights) {
-        System.out.println("--- УСІ РЕЕЙСИ ---\n");
+        System.out.println("--- УСІ РЕЙСИ ---");
 
         System.out.printf(
                 "%-5s %-10s %-10s %-20s %-10s%n",

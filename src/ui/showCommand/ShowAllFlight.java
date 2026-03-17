@@ -1,4 +1,4 @@
-package ui;
+package ui.showCommand;
 
 import entity.Flight;
 import service.FlightService;
@@ -16,7 +16,7 @@ public class ShowAllFlight implements Command {
 
     @Override
     public String choice() {
-        return "2";
+        return "1";
     }
 
     @Override
