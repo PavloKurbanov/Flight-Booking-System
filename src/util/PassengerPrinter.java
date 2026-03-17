@@ -6,9 +6,10 @@ import java.util.List;
 
 public class PassengerPrinter {
     public static void printPassenger(List<Passenger> passengers) {
-        System.out.println( "--- ПАСАЖИРИ ---\n");
+
+        System.out.println("--- ПАСАЖИРИ ---\n");
         System.out.printf(
-                "%-5s %-10s %-10s",
+                "%-5s %-10s %-10s%n",
                 "ID", "FIRST NAME", "LAST NAME"
         );
 

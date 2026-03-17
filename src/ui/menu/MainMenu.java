@@ -16,7 +16,7 @@ public class MainMenu {
     public MainMenu(InputOutput inputOutput, FlightService flightService, PassengerService passengerService, TicketService ticketService) {
         this.inputOutput = inputOutput;
         MainMenuBuilder mainMenuBuilder = new MainMenuBuilder(inputOutput, flightService, passengerService, ticketService);
-        this.commandMap = mainMenuBuilder.showMenu();
+        this.commandMap = mainMenuBuilder.buildCommands();
     }
 
     public void showMenu() {

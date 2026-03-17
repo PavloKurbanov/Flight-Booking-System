@@ -21,12 +21,12 @@ public class ShowAllPassenger implements Command {
 
     @Override
     public void command() {
-        List<Passenger> passengerServiceAll = passengerService.getAll();
+        List<Passenger> passengers = passengerService.getAll();
 
-        if(passengerServiceAll.isEmpty()){
-            System.out.println("Не має жодного пасажира");
+        if (passengers.isEmpty()) {
+            System.out.println("Не має жодного пасажира.");
             return;
         }
-        PassengerPrinter.printPassenger(passengerServiceAll);
+        PassengerPrinter.printPassenger(passengers);
     }
 }

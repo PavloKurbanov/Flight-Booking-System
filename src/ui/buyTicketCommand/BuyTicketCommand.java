@@ -1,4 +1,4 @@
-package ui;
+package ui.buyTicketCommand;
 
 import entity.Flight;
 import entity.Passenger;
@@ -27,7 +27,7 @@ public class BuyTicketCommand implements Command {
 
     @Override
     public String choice() {
-        return "";
+        return "4";
     }
 
     @Override
