@@ -57,12 +57,9 @@ public class InFilePassengerRepository implements PassengerRepository {
     }
 
     private void saveFile() throws IOException {
-        List<String> passengers = new ArrayList<>();
+        List<String> passengers = passengerMap.values().stream().map(passenger -> passenger.getId() + ","
+                + passenger.getFirstName() + "," + passenger.getLastName()).toList();
 
-        for (Passenger passenger : passengerMap.values()) {
-            String list = passenger.getId() + "," + passenger.getFirstName() + "," + passenger.getLastName();
-            passengers.add(list);
-        }
         Files.write(filePath, passengers);
     }
 

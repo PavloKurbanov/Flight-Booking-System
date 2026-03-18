@@ -17,7 +17,7 @@ public class PassengerPrinter {
 
         for (Passenger p : passengers) {
             System.out.printf(
-                    "%-5d %-10s %-10s",
+                    "%-5d %-10s %-10s%n",
                     p.getId(),
                     p.getFirstName(),
                     p.getLastName()

@@ -61,14 +61,10 @@ public class InFileFlightRepository implements FlightRepository {
     }
 
     private void saveFile() throws IOException {
-        List<String> file = new ArrayList<>();
+        List<String> file = flightMap.values().stream().map(flight -> flight.getId() + "," +
+                flight.getDepartureCity() + "," + flight.getArrivalCity() + ","
+                + flight.getDepartureTime() + "," + flight.getTotalSeats() + "," + flight.getAvailableSeats()).toList();
 
-        for (Flight flight : flightMap.values()) {
-            String flightList = flight.getId() + "," + flight.getDepartureCity() + "," + flight.getArrivalCity() + ","
-                    + flight.getDepartureTime() + "," + flight.getTotalSeats() + "," + flight.getAvailableSeats();
-
-            file.add(flightList);
-        }
         Files.write(filePath, file);
     }
 

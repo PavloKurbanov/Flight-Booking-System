@@ -4,12 +4,8 @@ import entity.Flight;
 import repository.FlightRepository;
 import service.FlightService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class FlightServiceImpl implements FlightService {
     private final FlightRepository flightRepository;
@@ -62,39 +58,6 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<Flight> findFlightsForGroup(String departureCity, String arrivalCity, Integer requiredSeats) {
-        return getAll()
-                .stream()
-                .filter(flight -> flight.getDepartureCity().equalsIgnoreCase(departureCity))
-                .filter(flight -> flight.getArrivalCity().equalsIgnoreCase(arrivalCity))
-                .filter(flight -> flight.getAvailableSeats() >= requiredSeats)
-                .sorted()
-                .collect(Collectors.toList());
-    }
-    /*
-    1. getAll(): Бере всі рейси з бази.
-    2. stream(): Відкриває "конвеєр" для обробки.
-    3. filter(...) x3: Відсіює рейси з іншими містами та ті, де не вистачає місць. Працює по черзі: якщо перша умова не підійшла, інші навіть не перевіряються.
-    4. sorted(): Вишиковує рейси, що залишилися, за часом вильоту.
-    5. collect(): Збирає результат у новий список і віддає клієнту.
-    */
-
-    @Override
-    public List<Flight> findByDate(LocalDate date) {
-        if (Objects.isNull(date)) {
-            throw new IllegalArgumentException("Дата не може бути null!");
-        }
-        return getAll().stream()
-                .filter(flight -> flight.getDepartureTime().toLocalDate().equals(date))
-                .sorted()
-                .collect(Collectors.toList());
-    }
-    /*
-    1. filter(): Бере час вильоту кожного рейсу (LocalDateTime), відрізає від нього години/хвилини (.toLocalDate()) і порівнює з шуканою датою.
-    2. sorted() + collect(): Сортує за часом і збирає в список.
-    */
-
-    @Override
     public void reserveSeats(Long flightId, int seatsToBook) {
         if(seatsToBook <= 0){
             throw new IllegalArgumentException("Кількість місць має бути більшою за нуль!");
@@ -126,25 +89,17 @@ public class FlightServiceImpl implements FlightService {
         if(flight == null){
             throw new IllegalArgumentException("Не має такого ID!");
         }
-        if (flight.getAvailableSeats() >= seatsToBook) {
-            int seats = flight.getAvailableSeats() - seatsToBook;
-            flight.setAvailableSeats(seats);
-            flightRepository.save(flight);
-            return;
+
+        if (flight.getAvailableSeats() + seatsToBook > flight.getTotalSeats()) {
+            throw new IllegalArgumentException("Помилка: вільних місць не може бути більше за місткість літака!");
         }
+        flight.setAvailableSeats(flight.getAvailableSeats() + seatsToBook);
+        flightRepository.save(flight);
     }
 
     private boolean isSameRouteAndTime(Flight existingFlight, Flight newFlight) {
         return newFlight.getDepartureCity().equalsIgnoreCase(existingFlight.getDepartureCity())
                 && newFlight.getArrivalCity().equalsIgnoreCase(existingFlight.getArrivalCity())
                 && newFlight.getDepartureTime().equals(existingFlight.getDepartureTime());
-    }
-
-    @Override
-    public List<Flight> getSortedFlights(Comparator<Flight> comparator) {
-        if (Objects.isNull(comparator)) {
-            throw new IllegalArgumentException("Тип сортування не може бути null!");
-        }
-        return getAll().stream().sorted(comparator).collect(Collectors.toList());
     }
 }

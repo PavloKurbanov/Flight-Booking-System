@@ -67,12 +67,9 @@ public class InFileTicketRepository implements TicketRepository {
     }
 
     private void saveFile() throws IOException {
-        List<String> list = new ArrayList<>();
+        List<String> list = ticketMap.values().stream().map(ticket -> ticket.getId() + ","
+                + ticket.getFlightId() + "," + ticket.getPassengerId() + "," + ticket.getPrice()).toList();
 
-        for (Ticket ticket : ticketMap.values()) {
-            String line = ticket.getId() + "," + ticket.getFlightId() + "," + ticket.getPassengerId() + "," + ticket.getPrice();
-            list.add(line);
-        }
         Files.write(filePath, list);
     }
 
