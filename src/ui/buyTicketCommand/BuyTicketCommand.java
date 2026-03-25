@@ -34,10 +34,12 @@ public class BuyTicketCommand implements Command {
     public void command() {
         List<Flight> allFlight = flightService.getAll();
         List<Passenger> allPassengers = passengerService.getAll();
+
         if (allFlight.isEmpty()) {
             System.out.println("На жаль, доступних рейсів немає.");
             return;
         }
+
         if (allPassengers.isEmpty()) {
             System.out.println("База клієнтів порожня. Спочатку зареєструйте пасажира.");
             return;

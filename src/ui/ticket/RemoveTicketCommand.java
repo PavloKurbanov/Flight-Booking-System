@@ -1,6 +1,5 @@
-package ui.removeTicketCommand;
+package ui.ticket;
 
-import com.sun.source.tree.TryTree;
 import entity.Ticket;
 import io.InputOutput;
 import service.FlightService;

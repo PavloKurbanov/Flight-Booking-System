@@ -21,9 +21,8 @@ public class MainMenu {
 
     public void showMenu() {
         while (true) {
-            System.out.println("1) Показати всі рейси");
-            System.out.println("2) Показати всіх пасажирів");
-            System.out.println("3) Показати всі квитки");
+            System.out.println("1) Реєстрація");
+            System.out.println("2) Показати інформацію");
             System.out.println("4) Купити квиток");
             System.out.println("5) Повернути квиток");
             System.out.println("6) Показати квитки пасажира");

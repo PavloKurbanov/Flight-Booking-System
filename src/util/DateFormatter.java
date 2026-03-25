@@ -12,7 +12,11 @@ public class DateFormatter {
         return (date == null) ? "N/A" : date.format(FORMATTER);
     }
 
-    public static LocalDate parse(String text) throws DateTimeParseException {
+    public static LocalDate parseLocalDate(String text) throws DateTimeParseException {
         return LocalDate.parse(text, FORMATTER);
+    }
+
+    public static LocalDateTime parseLocalDateTime(String text) throws DateTimeParseException {
+        return LocalDateTime.parse(text, FORMATTER);
     }
 }

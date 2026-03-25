@@ -1,5 +1,9 @@
 package io;
 
+import util.DateFormatter;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class InputOutput {
@@ -34,5 +38,18 @@ public class InputOutput {
                 System.out.println("Будь ласка, введіть число!");
             }
         }
+    }
+
+    public LocalDateTime readDateTime(String prompt) {
+        System.out.print(prompt);
+        LocalDateTime dateTime = null;
+        while (dateTime == null) {
+            try {
+                dateTime = DateFormatter.parseLocalDateTime(scanner.nextLine());
+            } catch (DateTimeParseException e) {
+                System.out.println("ПОМИЛКА: Невірний формат дати. " + e.getMessage());
+            }
+        }
+        return dateTime;
     }
 }
