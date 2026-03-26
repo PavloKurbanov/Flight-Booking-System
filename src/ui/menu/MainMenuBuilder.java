@@ -23,7 +23,7 @@ public record MainMenuBuilder(InputOutput inputOutput, FlightService flightServi
         Command registrationMenuCommand = new RegistrationMenuCommand(inputOutput, flightService, ticketService, passengerService);
         Command showMenuCommand = new ShowMenuCommand(inputOutput, flightService, passengerService, ticketService, ticketMapper);
         Command buyTicket = new BuyTicketCommand(inputOutput, passengerService, flightService, ticketService);
-        Command removeTicket = new RemoveTicketCommand(inputOutput, ticketService, ticketMapper);
+        Command removeTicket = new RemoveTicketCommand(inputOutput, ticketService, passengerService, ticketMapper);
 
 
         map.put(registrationMenuCommand.choice(), registrationMenuCommand);

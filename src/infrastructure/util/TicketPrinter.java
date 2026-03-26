@@ -11,7 +11,7 @@ public class TicketPrinter {
         System.out.println("--------------------------------------------------------");
 
         for (TicketDTO t : tickets) {
-            System.out.printf("%-5d %-15s %-15s %-20s$%n",
+            System.out.printf("%-5d %-15s %-15s %-20s%n",
                     t.id(), t.departureCity(), t.arrivalCity(), t.passengerFullName());
         }
     }

@@ -24,15 +24,6 @@ public class InFileFlightRepository implements FlightRepository {
             } else {
                 loadFile();
             }
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                System.out.println("Зберігаю дані рейсів!");
-                try {
-                    saveFile();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -48,6 +39,11 @@ public class InFileFlightRepository implements FlightRepository {
             flight.setId(flightId++);
         }
         flightMap.put(flight.getId(), flight);
+        try {
+            saveFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

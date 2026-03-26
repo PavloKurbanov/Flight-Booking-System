@@ -23,16 +23,6 @@ public class InFileTicketRepository implements TicketRepository {
             } else {
                 loadFile();
             }
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                System.out.println("Зберігаю дані квитків!");
-                try {
-                    saveFile();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
