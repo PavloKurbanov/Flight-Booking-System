@@ -1,4 +1,4 @@
-package ui;
+package ui.menu;
 
 import service.FlightService;
 import service.PassengerService;

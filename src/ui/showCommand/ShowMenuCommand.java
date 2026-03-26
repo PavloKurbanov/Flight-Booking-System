@@ -1,4 +1,4 @@
-package ui;
+package ui.showCommand;
 
 import io.InputOutput;
 import service.FlightService;

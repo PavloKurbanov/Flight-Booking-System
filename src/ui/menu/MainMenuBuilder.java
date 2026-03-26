@@ -1,9 +1,10 @@
-package ui;
+package ui.menu;
 
 import io.InputOutput;
 import service.FlightService;
 import service.PassengerService;
 import service.TicketService;
+import ui.showCommand.ShowMenuCommand;
 import ui.buyTicketCommand.BuyTicketCommand;
 import ui.command.Command;
 import ui.ticket.RemoveTicketCommand;
