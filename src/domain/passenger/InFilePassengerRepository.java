@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InFilePassengerRepository implements PassengerRepository {
     private final Path filePath;
@@ -15,13 +15,24 @@ public class InFilePassengerRepository implements PassengerRepository {
 
     public InFilePassengerRepository(Path filePath) {
         this.filePath = filePath;
-        this.passengerMap = new HashMap<>();
+        this.passengerMap = new ConcurrentHashMap<>();
         try {
+
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
             } else {
                 loadFile();
             }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Зберігаю дані пасажира!");
+                try {
+                    saveFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

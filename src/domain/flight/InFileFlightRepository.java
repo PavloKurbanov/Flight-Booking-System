@@ -5,9 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InFileFlightRepository implements FlightRepository {
     private final Path filePath;
@@ -16,7 +16,7 @@ public class InFileFlightRepository implements FlightRepository {
 
     public InFileFlightRepository(Path filePath) {
         this.filePath = filePath;
-        this.flightMap = new HashMap<>();
+        this.flightMap = new ConcurrentHashMap<>();
 
         try {
             if (!Files.exists(filePath)) {
@@ -24,6 +24,15 @@ public class InFileFlightRepository implements FlightRepository {
             } else {
                 loadFile();
             }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Зберігаю дані рейсів!");
+                try {
+                    saveFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -39,12 +48,6 @@ public class InFileFlightRepository implements FlightRepository {
             flight.setId(flightId++);
         }
         flightMap.put(flight.getId(), flight);
-
-        try {
-            saveFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     @Override

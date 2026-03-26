@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InFileTicketRepository implements TicketRepository {
     private final Path filePath;
@@ -15,13 +15,24 @@ public class InFileTicketRepository implements TicketRepository {
 
     public InFileTicketRepository(Path filePath) {
         this.filePath = filePath;
-        this.ticketMap = new HashMap<>();
+        this.ticketMap = new ConcurrentHashMap<>();
         try {
+
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
             } else {
                 loadFile();
             }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Зберігаю дані квитків!");
+                try {
+                    saveFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
+
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
