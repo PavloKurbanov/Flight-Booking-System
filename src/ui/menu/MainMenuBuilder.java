@@ -1,15 +1,14 @@
 package ui.menu;
 
-import io.InputOutput;
-import service.FlightService;
-import service.PassengerService;
-import service.TicketService;
-import ui.registrationCommand.RegistrationMenuCommand;
-import ui.showCommand.ShowMenuCommand;
-import ui.buyTicketCommand.BuyTicketCommand;
+import infrastructure.io.InputOutput;
+import domain.flight.FlightService;
+import domain.passenger.PassengerService;
+import domain.ticket.TicketService;
+import ui.command.RegistrationMenuCommand;
+import ui.command.show.ShowMenuCommand;
+import ui.command.BuyTicketCommand;
 import ui.command.Command;
-import ui.ticket.RemoveTicketCommand;
-import ui.showCommand.*;
+import ui.command.RemoveTicketCommand;
 
 import java.util.HashMap;
 import java.util.Map;

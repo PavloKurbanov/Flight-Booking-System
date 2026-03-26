@@ -1,13 +1,13 @@
 package ui.menu;
 
-import io.InputOutput;
-import service.FlightService;
-import service.PassengerService;
-import service.TicketService;
-import ui.buyTicketCommand.BuyTicketCommand;
+import infrastructure.io.InputOutput;
+import domain.flight.FlightService;
+import domain.passenger.PassengerService;
+import domain.ticket.TicketService;
+import ui.command.BuyTicketCommand;
 import ui.command.Command;
-import ui.flight.RegistrationFlightCommand;
-import ui.passenger.RegistrationPassengerCommand;
+import ui.command.RegistrationFlightCommand;
+import ui.command.RegistrationPassengerCommand;
 
 import java.util.HashMap;
 import java.util.Map;

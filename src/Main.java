@@ -1,17 +1,16 @@
-import entity.Flight;
-import io.InputOutput;
-import repository.FlightRepository;
-import repository.PassengerRepository;
-import repository.TicketRepository;
-import repository.impl.InFileFlightRepository;
-import repository.impl.InFilePassengerRepository;
-import repository.impl.InFileTicketRepository;
-import service.FlightService;
-import service.PassengerService;
-import service.TicketService;
-import service.impl.FlightServiceImpl;
-import service.impl.PassengerServiceImpl;
-import service.impl.TicketServiceImpl;
+import infrastructure.io.InputOutput;
+import domain.flight.FlightRepository;
+import domain.passenger.PassengerRepository;
+import domain.ticket.TicketRepository;
+import domain.flight.InFileFlightRepository;
+import domain.passenger.InFilePassengerRepository;
+import domain.ticket.InFileTicketRepository;
+import domain.flight.FlightService;
+import domain.passenger.PassengerService;
+import domain.ticket.TicketService;
+import domain.flight.FlightServiceImpl;
+import domain.passenger.PassengerServiceImpl;
+import domain.ticket.TicketServiceImpl;
 import ui.menu.MainMenu;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or

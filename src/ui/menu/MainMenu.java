@@ -1,9 +1,9 @@
 package ui.menu;
 
-import io.InputOutput;
-import service.FlightService;
-import service.PassengerService;
-import service.TicketService;
+import infrastructure.io.InputOutput;
+import domain.flight.FlightService;
+import domain.passenger.PassengerService;
+import domain.ticket.TicketService;
 import ui.command.Command;
 
 import java.util.Map;
