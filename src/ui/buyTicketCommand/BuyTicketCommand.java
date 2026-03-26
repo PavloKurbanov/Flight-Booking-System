@@ -27,7 +27,7 @@ public class BuyTicketCommand implements Command {
 
     @Override
     public String choice() {
-        return "4";
+        return "3";
     }
 
     @Override

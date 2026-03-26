@@ -25,7 +25,7 @@ public class ShowAllPassengerTickets implements Command {
 
     @Override
     public String choice() {
-        return "6";
+        return "4";
     }
 
     @Override

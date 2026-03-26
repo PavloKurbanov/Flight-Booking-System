@@ -5,18 +5,18 @@ import io.InputOutput;
 import service.PassengerService;
 import ui.command.Command;
 
-public class registrationPassengerCommand implements Command {
+public class RegistrationPassengerCommand implements Command {
     private final InputOutput inputOutput;
     private final PassengerService passengerService;
 
-    public registrationPassengerCommand(InputOutput inputOutput, PassengerService passengerService) {
+    public RegistrationPassengerCommand(InputOutput inputOutput, PassengerService passengerService) {
         this.inputOutput = inputOutput;
         this.passengerService = passengerService;
     }
 
     @Override
     public String choice() {
-        return "";
+        return "1";
     }
 
     @Override
@@ -26,7 +26,7 @@ public class registrationPassengerCommand implements Command {
 
         try {
             passengerService.save(new Passenger(null, firstName, lastName));
-            System.out.println("Пасажира " + firstName + " " + lastName);
+            System.out.println("Пасажира " + firstName + " " + lastName + " успішно зареєстровано!");
         } catch (IllegalArgumentException e) {
             System.out.println("ПОМИЛКА: " + e.getMessage());
         }

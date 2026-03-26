@@ -27,7 +27,7 @@ public class ShowAllFlightTickets implements Command {
 
     @Override
     public String choice() {
-        return "7";
+        return "5";
     }
 
     @Override

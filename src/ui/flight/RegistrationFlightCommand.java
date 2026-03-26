@@ -7,18 +7,18 @@ import ui.command.Command;
 
 import java.time.LocalDateTime;
 
-public class registrationFlightCommand implements Command {
+public class RegistrationFlightCommand implements Command {
     private final InputOutput inputOutput;
     private final FlightService flightService;
 
-    public registrationFlightCommand(InputOutput inputOutput, FlightService flightService) {
+    public RegistrationFlightCommand(InputOutput inputOutput, FlightService flightService) {
         this.inputOutput = inputOutput;
         this.flightService = flightService;
     }
 
     @Override
     public String choice() {
-        return "";
+        return "2";
     }
 
     @Override

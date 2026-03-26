@@ -22,10 +22,8 @@ public class MainMenu {
         while (true) {
             System.out.println("1) Реєстрація");
             System.out.println("2) Показати інформацію");
-            System.out.println("4) Купити квиток");
-            System.out.println("5) Повернути квиток");
-            System.out.println("6) Показати квитки пасажира");
-            System.out.println("7) Показати квитки на рейс");
+            System.out.println("3) Купити квиток");
+            System.out.println("4) Повернути квиток");
             System.out.println("0) Вийти");
 
             String choice = inputOutput.readString("Ваш вибір: ");

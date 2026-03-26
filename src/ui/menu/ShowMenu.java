@@ -14,7 +14,7 @@ public class ShowMenu {
 
     public ShowMenu(InputOutput inputOutput, FlightService flightService, PassengerService passengerService, TicketService ticketService) {
         this.inputOutput = inputOutput;
-        ShowMenuBuilder showMenuBuilder = new ShowMenuBuilder(flightService, passengerService, ticketService);
+        ShowMenuBuilder showMenuBuilder = new ShowMenuBuilder(inputOutput, flightService, passengerService, ticketService);
         this.commands = showMenuBuilder.showMenu();
     }
 
@@ -23,6 +23,8 @@ public class ShowMenu {
             System.out.println("1) Показати всі рейси");
             System.out.println("2) Показати всіх пасажирів");
             System.out.println("3) Показати всі квитки");
+            System.out.println("4) Показати квитки пасажира");
+            System.out.println("5) Показати квитки на рейс");
             System.out.println("0) Повернутись до меню");
 
             String input = inputOutput.readString("Ваш вибір: ");
