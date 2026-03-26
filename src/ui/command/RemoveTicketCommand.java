@@ -1,28 +1,22 @@
 package ui.command;
 
-import domain.flight.Flight;
-import domain.passenger.Passenger;
 import domain.ticket.Ticket;
 import domain.ticket.TicketDTO;
-import infrastructure.io.InputOutput;
-import domain.flight.FlightService;
-import domain.passenger.PassengerService;
+import domain.ticket.TicketMapper;
 import domain.ticket.TicketService;
+import infrastructure.io.InputOutput;
 import infrastructure.util.TicketPrinter;
-
 import java.util.List;
 
 public class RemoveTicketCommand implements Command {
     private final InputOutput inputOutput;
     private final TicketService ticketService;
-    private final PassengerService passengerService;
-    private final FlightService flightService;
+    private final TicketMapper ticketMapper;
 
-    public RemoveTicketCommand(InputOutput inputOutput, TicketService ticketService, PassengerService passengerService, FlightService flightService) {
+    public RemoveTicketCommand(InputOutput inputOutput, TicketService ticketService, TicketMapper ticketMapper) {
         this.inputOutput = inputOutput;
         this.ticketService = ticketService;
-        this.passengerService = passengerService;
-        this.flightService = flightService;
+        this.ticketMapper = ticketMapper;
     }
 
     @Override
@@ -34,27 +28,7 @@ public class RemoveTicketCommand implements Command {
     public void command() {
         List<Ticket> ticketServiceAll = ticketService.getAll();
 
-        if (ticketServiceAll.isEmpty()) {
-            System.out.println("Немає проданих квитків.");
-            return;
-        }
-
-        List<TicketDTO> dtoList = ticketServiceAll.stream()
-                .map(ticket ->
-                {
-                    Passenger passenger = passengerService.findById(ticket.getPassengerId());
-                    Flight flight = flightService.findById(ticket.getFlightId());
-
-                    String getFullName = passenger.getFirstName() + " " + passenger.getLastName();
-
-                    return new TicketDTO(
-                            ticket.getId(),
-                            flight.getDepartureCity(),
-                            flight.getArrivalCity(),
-                            getFullName,
-                            ticket.getPrice()
-                    );
-                }).toList();
+        List<TicketDTO> dtoList = ticketMapper.toDTOList(ticketServiceAll);
 
         TicketPrinter.printTicket(dtoList);
 

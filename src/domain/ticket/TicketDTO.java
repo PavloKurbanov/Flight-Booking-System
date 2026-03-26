@@ -1,4 +1,4 @@
 package domain.ticket;
 
-public record TicketDTO(Long id, String departureCity, String arrivalCity, String passengerFullName, Integer price) {
+public record TicketDTO(Long id, String departureCity, String arrivalCity, String passengerFullName) {
 }

@@ -1,5 +1,6 @@
 package ui.menu;
 
+import domain.ticket.TicketMapper;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
@@ -12,9 +13,9 @@ public class MainMenu {
     private final InputOutput inputOutput;
     private final Map<String, Command> commandMap;
 
-    public MainMenu(InputOutput inputOutput, FlightService flightService, PassengerService passengerService, TicketService ticketService) {
+    public MainMenu(InputOutput inputOutput, FlightService flightService, PassengerService passengerService, TicketService ticketService, TicketMapper ticketMapper) {
         this.inputOutput = inputOutput;
-        MainMenuBuilder mainMenuBuilder = new MainMenuBuilder(inputOutput, flightService, passengerService, ticketService);
+        MainMenuBuilder mainMenuBuilder = new MainMenuBuilder(inputOutput, flightService, passengerService, ticketService, ticketMapper);
         this.commandMap = mainMenuBuilder.buildCommands();
     }
 

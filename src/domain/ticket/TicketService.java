@@ -9,7 +9,7 @@ public interface TicketService {
      * Головний метод системи. Має звернутися до FlightService (зменшити місця),
      * до PassengerService (зберегти/знайти людину), створити об'єкт Ticket і зберегти його в базу.
      */
-    void save(Long flightId, Long passengerId, Integer price);
+    void save(Long flightId, Long passengerId);
 
 
     /**

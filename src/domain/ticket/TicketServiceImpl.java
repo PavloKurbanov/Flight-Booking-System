@@ -22,7 +22,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void save(Long flightId, Long passengerId, Integer price) {
+    public void save(Long flightId, Long passengerId) {
         Flight flight = flightService.findById(flightId);
         Passenger passenger = passengerService.findById(passengerId);
 
@@ -32,16 +32,13 @@ public class TicketServiceImpl implements TicketService {
         if (passenger == null) {
             throw new IllegalArgumentException("Пасажира з ID: " + passengerId + " не знайдено!");
         }
-        if (price <= 0) {
-            throw new IllegalArgumentException("Ціна не може бути менше 0!");
-        }
 
         if (flight.getAvailableSeats() <= 0) {
             throw new IllegalArgumentException("Рейс ID: " + flightId + " не має вільних місць!");
         }
 
         flightService.reserveSeats(flightId, 1);
-        ticketRepository.save(new Ticket(null, passengerId, flightId, price));
+        ticketRepository.save(new Ticket(null, passengerId, flightId));
     }
 
     @Override

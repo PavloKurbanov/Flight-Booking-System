@@ -33,8 +33,7 @@ public class TicketMapper {
                             ticket.getId(),
                             safeDeparture,
                             safeArrival,
-                            safeFullName,
-                            ticket.getPrice()
+                            safeFullName
                     );
 
                 }).toList();

@@ -1,16 +1,13 @@
+import domain.ticket.*;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightRepository;
 import domain.passenger.PassengerRepository;
-import domain.ticket.TicketRepository;
 import domain.flight.InFileFlightRepository;
 import domain.passenger.InFilePassengerRepository;
-import domain.ticket.InFileTicketRepository;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
-import domain.ticket.TicketService;
 import domain.flight.FlightServiceImpl;
 import domain.passenger.PassengerServiceImpl;
-import domain.ticket.TicketServiceImpl;
 import ui.menu.MainMenu;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -29,7 +26,8 @@ void main() {
     FlightService flightService = new FlightServiceImpl(flightRepository);
     PassengerService passengerService = new PassengerServiceImpl(passengerRepository);
     TicketService ticketService = new TicketServiceImpl(flightService, passengerService, ticketRepository);
+    TicketMapper ticketMapper = new TicketMapper(flightService, passengerService);
 
-    MainMenu mainMenu = new MainMenu(inputOutput, flightService, passengerService, ticketService);
+    MainMenu mainMenu = new MainMenu(inputOutput, flightService, passengerService, ticketService, ticketMapper);
     mainMenu.showMenu();
 }

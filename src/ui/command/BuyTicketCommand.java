@@ -49,11 +49,9 @@ public class BuyTicketCommand implements Command {
 
         PassengerPrinter.printPassenger(allPassengers);
         Long passengerID = inputOutput.readLong("Введіть ID пасажира: ");
-        
-        Integer price = inputOutput.readInt("Введіть суму рейсу: ");
 
         try {
-            ticketService.save(flightID, passengerID, price);
+            ticketService.save(flightID, passengerID);
 
             Flight flight = flightService.findById(flightID);
             Passenger passenger = passengerService.findById(passengerID);

@@ -1,5 +1,6 @@
 package ui.menu;
 
+import domain.ticket.TicketMapper;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
@@ -14,15 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record MainMenuBuilder(InputOutput inputOutput, FlightService flightService, PassengerService passengerService,
-                              TicketService ticketService) {
+                              TicketService ticketService, TicketMapper ticketMapper) {
 
     public Map<String, Command> buildCommands() {
         Map<String, Command> map = new HashMap<>();
 
         Command registrationMenuCommand = new RegistrationMenuCommand(inputOutput, flightService, ticketService, passengerService);
-        Command showMenuCommand = new ShowMenuCommand(inputOutput, flightService, passengerService, ticketService);
+        Command showMenuCommand = new ShowMenuCommand(inputOutput, flightService, passengerService, ticketService, ticketMapper);
         Command buyTicket = new BuyTicketCommand(inputOutput, passengerService, flightService, ticketService);
-        Command removeTicket = new RemoveTicketCommand(inputOutput, ticketService, passengerService, flightService);
+        Command removeTicket = new RemoveTicketCommand(inputOutput, ticketService, ticketMapper);
 
 
         map.put(registrationMenuCommand.choice(), registrationMenuCommand);

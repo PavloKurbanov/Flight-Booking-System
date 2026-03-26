@@ -76,7 +76,7 @@ public class InFileTicketRepository implements TicketRepository {
 
     private void saveFile() throws IOException {
         List<String> list = ticketMap.values().stream().map(ticket -> ticket.getId() + ","
-                + ticket.getFlightId() + "," + ticket.getPassengerId() + "," + ticket.getPrice()).toList();
+                + ticket.getFlightId() + "," + ticket.getPassengerId()).toList();
 
         Files.write(filePath, list);
     }
@@ -95,9 +95,8 @@ public class InFileTicketRepository implements TicketRepository {
             Long id = Long.parseLong(split[0]);
             Long flightId = Long.parseLong(split[1]);
             Long passengerId = Long.parseLong(split[2]);
-            Integer price = Integer.parseInt(split[3]);
 
-            Ticket ticket = new Ticket(id, flightId, passengerId, price);
+            Ticket ticket = new Ticket(id, flightId, passengerId);
             ticketMap.put(id, ticket);
 
             if (id >= this.ticketId) {
