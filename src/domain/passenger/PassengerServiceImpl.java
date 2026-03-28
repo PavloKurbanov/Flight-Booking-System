@@ -1,5 +1,7 @@
 package domain.passenger;
 
+import framework.validatorEngine.ValidationEngine;
+
 import java.util.List;
 
 public class PassengerServiceImpl implements PassengerService {
@@ -14,6 +16,8 @@ public class PassengerServiceImpl implements PassengerService {
         if (passenger == null) {
             throw new IllegalArgumentException("Пасажир не може бути null!");
         }
+
+        ValidationEngine.validator(passenger);
 
         return getAll().stream()
                 .filter(p -> p.getFirstName().trim().equalsIgnoreCase(passenger.getFirstName())

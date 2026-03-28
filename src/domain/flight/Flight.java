@@ -1,29 +1,30 @@
 package domain.flight;
 
+import framework.validatorEngine.validatorAnnotation.NotBlank;
+import framework.validatorEngine.validatorAnnotation.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Flight implements Comparable<Flight> {
     private Long id;
+
+    @NotNull
+    @NotBlank(message = "Введіть коректне місто відправлення!")
     private final String departureCity;
+
+    @NotNull
+    @NotBlank(message = "Введіть коректне місто прибуття!")
     private final String arrivalCity;
+
+    @NotNull
     private final LocalDateTime departureTime;
+
+    @NotNull
     private final Integer totalSeats;
     private Integer availableSeats;
 
     public Flight(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats) {
-        if (departureCity == null || departureCity.isBlank()) {
-            throw new IllegalArgumentException("Введіть коректне місто відправлення!");
-        }
-        if (arrivalCity == null || arrivalCity.isBlank()) {
-            throw new IllegalArgumentException("Введіть коректне місто прибуття!");
-        }
-        if (departureTime == null) {
-            throw new IllegalArgumentException("Введіть коректний час вильоту!");
-        }
-        if (totalSeats == null || totalSeats <= 10) {
-            throw new IllegalArgumentException("Кількість мість не може бути менше 10!");
-        }
         this.id = id;
         this.departureCity = departureCity;
         this.arrivalCity = arrivalCity;

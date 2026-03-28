@@ -1,31 +1,30 @@
 package ui.menu;
 
-import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
 import domain.ticket.TicketService;
-import ui.command.BuyTicketCommand;
+import framework.menuEngine.MenuEngine;
+import framework.menuEngine.menuValidation.MenuGroup;
+import infrastructure.io.InputOutput;
 import ui.command.Command;
 import ui.command.RegistrationFlightCommand;
 import ui.command.RegistrationPassengerCommand;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public record RegistrationMenuBuilder(InputOutput inputOutput, FlightService flightService, TicketService ticketService,
                                       PassengerService passengerService) {
 
-    public Map<String, Command> showMenu() {
-        Map<String, Command> menu = new HashMap<>();
+    public Map<Integer, Command> showMenu() {
 
         Command registrationPassenger = new RegistrationPassengerCommand(inputOutput, passengerService);
         Command registrationFlight = new RegistrationFlightCommand(inputOutput, flightService);
-        Command buyTicket = new BuyTicketCommand(inputOutput, passengerService, flightService, ticketService);
 
-        menu.put(registrationPassenger.choice(), registrationPassenger);
-        menu.put(registrationFlight.choice(), registrationFlight);
-        menu.put(buyTicket.choice(), buyTicket);
+        List<Command> commands = List.of(registrationPassenger,
+                registrationFlight
+        );
 
-        return menu;
+        return MenuEngine.commands(commands, MenuGroup.REGISTRATION);
     }
 }

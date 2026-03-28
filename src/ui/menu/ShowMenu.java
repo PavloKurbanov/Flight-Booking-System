@@ -1,6 +1,7 @@
 package ui.menu;
 
 import domain.ticket.TicketMapper;
+import framework.menuPrinter.MenuPrinter;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class ShowMenu {
     private final InputOutput inputOutput;
-    private final Map<String, Command> commands;
+    private final Map<Integer, Command> commands;
 
     public ShowMenu(InputOutput inputOutput, FlightService flightService, PassengerService passengerService, TicketService ticketService, TicketMapper ticketMapper) {
         this.inputOutput = inputOutput;
@@ -21,16 +22,11 @@ public class ShowMenu {
 
     public void showMenu() {
         while (true) {
-            System.out.println("1) Показати всі рейси");
-            System.out.println("2) Показати всіх пасажирів");
-            System.out.println("3) Показати всі квитки");
-            System.out.println("4) Показати квитки пасажира");
-            System.out.println("5) Показати квитки на рейс");
-            System.out.println("0) Повернутись до меню");
+            MenuPrinter.printMenu(commands);
 
-            String input = inputOutput.readString("Ваш вибір: ");
+            Integer input = inputOutput.readInt("Ваш вибір: ");
 
-            if (input.equals("0")) {
+            if (input == 0) {
                 return;
             } else {
                 Command command = commands.get(input);

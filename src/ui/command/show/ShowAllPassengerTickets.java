@@ -3,15 +3,16 @@ package ui.command.show;
 import domain.ticket.Ticket;
 import domain.ticket.TicketDTO;
 import domain.ticket.TicketMapper;
+import framework.menuEngine.menuValidation.MenuGroup;
+import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
-import domain.flight.FlightService;
-import domain.passenger.PassengerService;
 import domain.ticket.TicketService;
 import ui.command.Command;
 import infrastructure.util.TicketPrinter;
 
 import java.util.List;
 
+@MenuItem(action = 4, description = "Показати квитки пасажира", menuGroup = MenuGroup.SHOW)
 public class ShowAllPassengerTickets implements Command {
     private final InputOutput inputOutput;
     private final TicketService ticketService;
@@ -22,12 +23,6 @@ public class ShowAllPassengerTickets implements Command {
         this.ticketService = ticketService;
         this.ticketMapper =  ticketMapper;
     }
-
-    @Override
-    public String choice() {
-        return "4";
-    }
-
     @Override
     public void command() {
         String s = inputOutput.readString("Введіть ім'я та прізвище пасажира: ");

@@ -1,19 +1,22 @@
 package domain.passenger;
 
+import framework.validatorEngine.validatorAnnotation.NotBlank;
+import framework.validatorEngine.validatorAnnotation.NotNull;
+
 import java.util.Objects;
 
 public class Passenger implements Comparable<Passenger> {
     private Long id;
+
+    @NotNull
+    @NotBlank(message = "Введіть коректне ім'я!")
     private final String firstName;
+
+    @NotNull
+    @NotBlank(message = "Введіть коректне прізвище!")
     private final String lastName;
 
     public Passenger(Long id, String firstName, String lastName) {
-        if (firstName == null || firstName.isBlank()) {
-            throw new IllegalArgumentException("Введіть коректне ім'я!");
-        }
-        if (lastName == null || lastName.isBlank()) {
-            throw new IllegalArgumentException("Введіть коректне прізвище!");
-        }
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

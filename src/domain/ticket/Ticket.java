@@ -1,20 +1,20 @@
 package domain.ticket;
 
+import framework.validatorEngine.validatorAnnotation.NotNull;
+
 import java.util.Objects;
 
 public class Ticket{
     private Long id;
+
+    @NotNull(message = "Введіть коректне ID пасажира!")
     private final Long passengerId;
+
+    @NotNull(message = "Введіть коректне ID літака!")
     private final Long flightId;
 
 
     public Ticket(Long id, Long passengerId, Long flightId) {
-        if (passengerId == null) {
-            throw new IllegalArgumentException("Введіть коректне ID пасажира!");
-        }
-        if (flightId == null) {
-            throw new IllegalArgumentException("Введіть коректне ID літака!");
-        }
         this.id = id;
         this.passengerId = passengerId;
         this.flightId = flightId;

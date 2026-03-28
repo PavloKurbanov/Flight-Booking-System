@@ -1,11 +1,14 @@
 package ui.command;
 
 import domain.flight.Flight;
+import framework.menuEngine.menuValidation.MenuGroup;
+import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 
 import java.time.LocalDateTime;
 
+@MenuItem(action = 2, description = "Зареєструвати рейс", menuGroup = MenuGroup.REGISTRATION)
 public class RegistrationFlightCommand implements Command {
     private final InputOutput inputOutput;
     private final FlightService flightService;
@@ -13,11 +16,6 @@ public class RegistrationFlightCommand implements Command {
     public RegistrationFlightCommand(InputOutput inputOutput, FlightService flightService) {
         this.inputOutput = inputOutput;
         this.flightService = flightService;
-    }
-
-    @Override
-    public String choice() {
-        return "2";
     }
 
     @Override

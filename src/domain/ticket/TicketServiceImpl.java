@@ -4,6 +4,7 @@ import domain.flight.Flight;
 import domain.passenger.Passenger;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
+import framework.validatorEngine.ValidationEngine;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +38,12 @@ public class TicketServiceImpl implements TicketService {
             throw new IllegalArgumentException("Рейс ID: " + flightId + " не має вільних місць!");
         }
 
+        Ticket ticket = new Ticket(null, passengerId, flightId);
+
+        ValidationEngine.validator(ticket);
+
         flightService.reserveSeats(flightId, 1);
-        ticketRepository.save(new Ticket(null, passengerId, flightId));
+        ticketRepository.save(ticket);
     }
 
     @Override

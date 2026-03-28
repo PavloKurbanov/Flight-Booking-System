@@ -1,17 +1,17 @@
 package ui.command.show;
 
 import domain.ticket.Ticket;
-import domain.flight.FlightService;
-import domain.passenger.PassengerService;
 import domain.ticket.TicketDTO;
 import domain.ticket.TicketMapper;
 import domain.ticket.TicketService;
+import framework.menuEngine.menuValidation.MenuGroup;
+import framework.menuEngine.menuValidation.MenuItem;
 import ui.command.Command;
 import infrastructure.util.TicketPrinter;
 
-import java.lang.annotation.Target;
 import java.util.List;
 
+@MenuItem(action = 3, description = "Показати всі квитки", menuGroup = MenuGroup.SHOW)
 public class ShowAllTicket implements Command {
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
@@ -19,11 +19,6 @@ public class ShowAllTicket implements Command {
     public ShowAllTicket(TicketService ticketService, TicketMapper ticketMapper) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
-    }
-
-    @Override
-    public String choice() {
-        return "3";
     }
 
     @Override

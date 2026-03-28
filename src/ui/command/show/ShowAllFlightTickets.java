@@ -1,13 +1,13 @@
 package ui.command.show;
 
 import domain.flight.Flight;
-import domain.passenger.Passenger;
 import domain.ticket.Ticket;
 import domain.ticket.TicketDTO;
 import domain.ticket.TicketMapper;
+import framework.menuEngine.menuValidation.MenuGroup;
+import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
-import domain.passenger.PassengerService;
 import domain.ticket.TicketService;
 import ui.command.Command;
 import infrastructure.util.FlightPrinter;
@@ -15,6 +15,7 @@ import infrastructure.util.TicketPrinter;
 
 import java.util.List;
 
+@MenuItem(action = 5, description = "Показати квитки на рейс", menuGroup = MenuGroup.SHOW)
 public class ShowAllFlightTickets implements Command {
     private final InputOutput inputOutput;
     private final TicketService ticketService;
@@ -26,11 +27,6 @@ public class ShowAllFlightTickets implements Command {
         this.ticketService = ticketService;
         this.flightService = flightService;
         this.ticketMapper = ticketMapper;
-    }
-
-    @Override
-    public String choice() {
-        return "5";
     }
 
     @Override

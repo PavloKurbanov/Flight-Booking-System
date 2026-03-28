@@ -1,5 +1,7 @@
 package domain.flight;
 
+import framework.validatorEngine.ValidationEngine;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,8 +15,11 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight save(Flight flight) {
         if (flight == null) {
-            throw new IllegalArgumentException("Квиток не може бути null!");
+            throw new IllegalArgumentException("Рейс не може бути null!");
         }
+
+        ValidationEngine.validator(flight);
+
         if (flight.getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Дата не може бути в минулому!");
         }
@@ -26,6 +31,7 @@ public class FlightServiceImpl implements FlightService {
         if (isDuplicate) {
             throw new IllegalArgumentException("Такий рейс вже існує!");
         }
+
         flightRepository.save(flight);
         return flight;
     }

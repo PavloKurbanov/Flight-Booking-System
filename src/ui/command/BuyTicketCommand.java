@@ -2,6 +2,7 @@ package ui.command;
 
 import domain.flight.Flight;
 import domain.passenger.Passenger;
+import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
@@ -11,6 +12,7 @@ import infrastructure.util.PassengerPrinter;
 
 import java.util.List;
 
+@MenuItem(action = 3, description = "Купити квиток")
 public class BuyTicketCommand implements Command {
     private final InputOutput inputOutput;
     private final PassengerService passengerService;
@@ -22,11 +24,6 @@ public class BuyTicketCommand implements Command {
         this.passengerService = passengerService;
         this.flightService = flightService;
         this.ticketService = ticketService;
-    }
-
-    @Override
-    public String choice() {
-        return "3";
     }
 
     @Override

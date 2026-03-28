@@ -6,11 +6,13 @@ import domain.ticket.Ticket;
 import domain.ticket.TicketDTO;
 import domain.ticket.TicketMapper;
 import domain.ticket.TicketService;
+import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
 import infrastructure.util.TicketPrinter;
 
 import java.util.List;
 
+@MenuItem(action = 4, description = "Повернути квиток")
 public class RemoveTicketCommand implements Command {
     private final InputOutput inputOutput;
     private final TicketService ticketService;
@@ -22,11 +24,6 @@ public class RemoveTicketCommand implements Command {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.passengerService = passengerService;
-    }
-
-    @Override
-    public String choice() {
-        return "4";
     }
 
     @Override

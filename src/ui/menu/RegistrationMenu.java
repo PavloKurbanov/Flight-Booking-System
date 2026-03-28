@@ -1,5 +1,6 @@
 package ui.menu;
 
+import framework.menuPrinter.MenuPrinter;
 import infrastructure.io.InputOutput;
 import domain.flight.FlightService;
 import domain.passenger.PassengerService;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 public class RegistrationMenu {
     private final InputOutput inputOutput;
-    private final Map<String, Command> commands;
+    private final Map<Integer, Command> commands;
 
     public RegistrationMenu(InputOutput inputOutput, FlightService flightService, TicketService ticketService, PassengerService passengerService) {
         this.inputOutput = inputOutput;
@@ -20,13 +21,11 @@ public class RegistrationMenu {
 
     public void showMenu() {
         while (true) {
-            System.out.println("1) Зареєструвати пасажира");
-            System.out.println("2) Зареєструвати рейс");
-            System.out.println("0) Повернутись до меню");
+            MenuPrinter.printMenu(commands);
 
-            String string = inputOutput.readString("Ваш вибір: ");
+            Integer string = inputOutput.readInt("Ваш вибір: ");
 
-            if (string.equals("0")) {
+            if (string == 0) {
                 return;
             } else {
                 Command command = commands.get(string);
