@@ -1,8 +1,8 @@
 package domain.ticket;
 
 import domain.flight.Flight;
-import domain.passenger.Passenger;
 import domain.flight.FlightService;
+import domain.passenger.Passenger;
 import domain.passenger.PassengerService;
 import framework.validatorEngine.ValidationEngine;
 
@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TicketServiceImpl implements TicketService {
     private final FlightService flightService;
@@ -74,10 +73,14 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void cancelTicket(Long ticketId) {
+    public void cancelTicket(Long ticketId, Long passengerId) {
         Ticket ticket = findById(ticketId);
         if (ticket == null) {
             throw new IllegalArgumentException("Квиток не знайдено!");
+        }
+
+        if(!Objects.equals(ticket.getPassengerId(), passengerId)){
+            throw new IllegalArgumentException("Цей квиток не належить пасажиру");
         }
 
         try {
@@ -91,32 +94,40 @@ public class TicketServiceImpl implements TicketService {
 
             connection.commit();
         } catch (Exception e) {
-            try { connection.rollback(); } catch (SQLException ex) { throw new RuntimeException(ex); }
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException("Не вдалося скасувати квиток", e);
         } finally {
-            try { connection.setAutoCommit(true); } catch (SQLException e) { throw new RuntimeException(e); }
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     @Override
     public List<Ticket> getTicketsByPassenger(String firstName, String lastName) {
-        List<Passenger> byFistAndLastName = passengerService.findByFistAndLastName(firstName, lastName);
+        Passenger byFistAndLastName = passengerService.findByFistAndLastName(firstName, lastName);
 
-        if (byFistAndLastName.isEmpty()) {
+        if (byFistAndLastName == null) {
             return Collections.emptyList();
         }
 
-        Long passengerId = byFistAndLastName.getFirst().getId();
+        Long passengerId = byFistAndLastName.getId();
 
-        return getAll().stream().filter(ticket -> ticket.getPassengerId().equals(passengerId)).collect(Collectors.toList());
+        return ticketRepository.findAllByPassengerId(passengerId);
     }
 
     @Override
     public List<Ticket> getTicketsByFlight(Long flightId) {
-        if(flightId == null){
+        if (flightId == null) {
             throw new IllegalArgumentException("Введіть коректні дані!");
         }
-        return getAll().stream().filter(ticket -> Objects.equals(ticket.getFlightId(), flightId)).collect(Collectors.toList());
+        return ticketRepository.findAllFlightsId(flightId);
     }
 
     @Override

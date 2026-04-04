@@ -31,16 +31,9 @@ public class FlightServiceImpl implements FlightService {
         if (isDuplicate) {
             throw new IllegalArgumentException("Такий рейс вже існує!");
         }
-
         flightRepository.save(flight);
         return flight;
     }
-    /*
-    1. Перевірки (if): Відкидають порожні об'єкти та рейси з минулого, щоб не навантажувати систему.
-    2. getAll(): Витягує всі існуючі рейси з бази.
-    3. stream().anyMatch(...): Запускає перевірку кожного існуючого рейсу з новим. Як тільки знаходить хоча б один повний збіг — миттєво зупиняється і повертає true (Коротке замикання).
-    4. save(): Якщо дублікатів немає, фізично записує новий рейс у базу.
-    */
 
     @Override
     public Flight findById(Long id) {
@@ -49,10 +42,6 @@ public class FlightServiceImpl implements FlightService {
         }
         return flightRepository.findById(id);
     }
-    /*
-    1. Перевірка: Захищає від передачі порожнього ID.
-    2. findById(): Звертається до бази і повертає знайдений рейс (або null, якщо такого немає).
-    */
 
     @Override
     public List<Flight> getAll() {
@@ -78,12 +67,6 @@ public class FlightServiceImpl implements FlightService {
         }
         throw new IllegalArgumentException("Не достатньо вільних місць!");
     }
-    /*
-    1. Охоронці: Перевіряють, чи адекватна кількість місць (>0) та чи взагалі існує такий рейс у базі.
-    2. Бізнес-логіка (if): Якщо вільних місць вистачає, віднімаємо потрібну кількість і міняємо стан літака.
-    3. Транзакція: save() фіксує нову кількість місць у базі даних.
-    4. Виняток: Якщо місць менше, ніж просять, транзакція відміняється і кидається помилка.
-    */
 
     @Override
     public void returnSeats(Long flightId, int seatsToBook) {

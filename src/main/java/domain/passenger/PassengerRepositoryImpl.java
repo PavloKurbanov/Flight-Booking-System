@@ -66,6 +66,29 @@ public class PassengerRepositoryImpl implements PassengerRepository {
         return passengers;
     }
 
+    @Override
+    public Passenger findByFirstNameAndLastName(String firstName, String lastName) {
+        String sql = "SELECT * FROM passengers WHERE first_name = ? AND last_name = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    long id = resultSet.getLong("id");
+                    String firsName1 = resultSet.getString("first_name");
+                    String lastName1 = resultSet.getString("last_name");
+
+                    return new Passenger(id, firsName1, lastName1);
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void insert(Passenger passenger) {
         String sql = "INSERT INTO passengers (first_name, last_name) VALUES (?, ?)";
 

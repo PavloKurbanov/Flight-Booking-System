@@ -18,15 +18,14 @@ public class PassengerServiceImpl implements PassengerService {
         }
 
         ValidationEngine.validator(passenger);
+        List<Passenger> allPassengers = getAll();
+        boolean isDuplicate = allPassengers.stream().anyMatch(p -> isSamePassenger(p, passenger));
 
-        return getAll().stream()
-                .filter(p -> p.getFirstName().trim().equalsIgnoreCase(passenger.getFirstName())
-                        && p.getLastName().trim().equalsIgnoreCase(passenger.getLastName()))
-                .findFirst().orElseGet(() -> {
-                    passengerRepository.save(passenger);
-                    return passenger;
-                });
-
+        if (isDuplicate) {
+            throw new IllegalArgumentException("Такий пасажир вже існує!");
+        }
+        passengerRepository.save(passenger);
+        return passenger;
     }
 
     @Override
@@ -43,16 +42,12 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public List<Passenger> findByFistAndLastName(String firstName, String lastName) {
-        return getAll()
-                .stream()
-                .filter(passenger -> passenger.getFirstName().equalsIgnoreCase(firstName)
-                        && passenger.getLastName().equalsIgnoreCase(lastName))
-                .sorted()
-                .toList();
+    public Passenger findByFistAndLastName(String firstName, String lastName) {
+        return passengerRepository.findByFirstNameAndLastName(firstName, lastName);
     }
-    /*
-    1. stream().filter(): Відбирає пасажирів, у яких збігаються і ім'я, і прізвище.
-    2. sorted().toList(): Сортує результати і повертає їх списком.
-    */
+
+    private boolean isSamePassenger(Passenger existingPassenger, Passenger passenger) {
+        return passenger.getFirstName().equalsIgnoreCase(existingPassenger.getFirstName())
+                && passenger.getLastName().equalsIgnoreCase(existingPassenger.getLastName());
+    }
 }

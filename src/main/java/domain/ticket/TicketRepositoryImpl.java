@@ -84,6 +84,51 @@ public class TicketRepositoryImpl implements TicketRepository {
         }
     }
 
+    public List<Ticket> findAllByPassengerId(Long passengerId) {
+        List<Ticket> tickets = new ArrayList<>();
+        String sql = "SELECT * FROM tickets WHERE passenger_id = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, passengerId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Long id = resultSet.getLong("id");
+                    Long passengerIdResult = resultSet.getLong("passenger_id");
+                    Long flightId = resultSet.getLong("flight_id");
+
+                    tickets.add(new Ticket(id, passengerIdResult, flightId));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tickets;
+    }
+
+    public List<Ticket> findAllFlightsId(Long flightId) {
+        List<Ticket> tickets = new ArrayList<>();
+
+        String sql = "SELECT * FROM tickets WHERE flight_id = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, flightId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Long id = resultSet.getLong("id");
+                    Long passenger = resultSet.getLong("passenger_id");
+                    Long flight = resultSet.getLong("flight_id");
+
+                    tickets.add(new Ticket(id, passenger, flight));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tickets;
+    }
+
     private void insert(Ticket ticket) {
         String sql = "INSERT INTO tickets (passenger_id, flight_id) VALUES (?, ?)";
 

@@ -53,22 +53,15 @@ public class RemoveTicketCommand implements Command {
             return;
         }
 
-        List<Passenger> byFistAndLastName = passengerService.findByFistAndLastName(split[0], split[1]);
+        Passenger byFistAndLastName = passengerService.findByFistAndLastName(split[0], split[1]);
 
-        if (byFistAndLastName.isEmpty()) {
+        if (byFistAndLastName == null) {
             System.out.println("❌ Такого пасажира не знайдено в базі!");
             return;
         }
 
-        boolean isOwner = byFistAndLastName.stream()
-                .anyMatch(passenger -> passenger.getId().equals(ticket.getPassengerId()));
-
-        if (!isOwner) {
-            System.out.println("❌ Помилка: Цей квиток не належить пасажиру " + string + "!");
-        }
-
         try {
-            ticketService.cancelTicket(ticketId);
+            ticketService.cancelTicket(ticketId, byFistAndLastName.getId());
             System.out.println("✅ Квиток #" + ticketId + " успішно скасовано, місце повернено в літак!");
         } catch (IllegalArgumentException e) {
             System.out.println("Не вірно вказаний пасажир!");

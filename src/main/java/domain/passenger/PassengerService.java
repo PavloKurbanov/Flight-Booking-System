@@ -7,7 +7,7 @@ public interface PassengerService {
 
     Passenger findById(Long passengerId);
 
-    List<Passenger> getAll();
+    Passenger findByFistAndLastName(String firstName, String LastName);
 
-    List<Passenger> findByFistAndLastName(String firstName, String LastName);
+    List<Passenger> getAll();
 }

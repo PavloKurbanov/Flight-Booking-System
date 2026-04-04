@@ -17,7 +17,7 @@ public interface TicketService {
      * Має знайти квиток за ID, звернутися до FlightService, щоб ПОВЕРНУТИ вільне місце назад у літак,
      * і після цього видалити квиток зі своєї бази.
      */
-    void cancelTicket(Long ticketId);
+    void cancelTicket(Long ticketId, Long passengerId);
 
     /**
      * [Пошук клієнта]
