@@ -14,28 +14,34 @@ import java.util.List;
 
 @MenuItem(action = 4, description = "Повернути квиток")
 public class RemoveTicketCommand implements Command {
+
     private final InputOutput inputOutput;
     private final TicketService ticketService;
     private final PassengerService passengerService;
-    private final TicketMapper ticketMapper;
+    private final TicketViewService ticketViewService;
 
-    public RemoveTicketCommand(InputOutput inputOutput, TicketService ticketService, PassengerService passengerService, TicketMapper ticketMapper) {
+    public RemoveTicketCommand(
+            InputOutput inputOutput,
+            TicketService ticketService,
+            PassengerService passengerService,
+            TicketViewService ticketViewService
+    ) {
         this.inputOutput = inputOutput;
         this.ticketService = ticketService;
-        this.ticketMapper = ticketMapper;
         this.passengerService = passengerService;
+        this.ticketViewService = ticketViewService;
     }
 
     @Override
     public void command() {
-        List<Ticket> ticketServiceAll = ticketService.getAll();
 
-        if (ticketServiceAll.isEmpty()) {
+        List<TicketDTO> dtoList = ticketViewService.getAllTicketsForView();
+
+        if (dtoList.isEmpty()) {
             System.out.println("Не має проданих квитків!");
             return;
         }
-        
-        List<TicketDTO> dtoList = ticketViewService.getAllTicketsForView();
+
         TicketPrinter.printTicket(dtoList);
 
         Long ticketId = inputOutput.readLong("Введіть ID тікета: ");
@@ -54,19 +60,18 @@ public class RemoveTicketCommand implements Command {
             return;
         }
 
-        Passenger byFistAndLastName = passengerService.findByFistAndLastName(split[0], split[1]);
+        Passenger passenger = passengerService.findByFistAndLastName(split[0], split[1]);
 
-        if (byFistAndLastName == null) {
+        if (passenger == null) {
             System.out.println("❌ Такого пасажира не знайдено в базі!");
             return;
         }
 
         try {
-            ticketService.cancelTicket(ticketId, byFistAndLastName.getId());
-            System.out.println("✅ Квиток #" + ticketId + " успішно скасовано, місце повернено в літак!");
+            ticketService.cancelTicket(ticketId, passenger.getId());
+            System.out.println("✅ Квиток #" + ticketId + " успішно скасовано!");
         } catch (IllegalArgumentException e) {
-            System.out.println("Не вірно вказаний пасажир!");
-            System.out.println("❌ Помилка:" + e.getMessage());
+            System.out.println("❌ Помилка: " + e.getMessage());
         }
     }
 }
