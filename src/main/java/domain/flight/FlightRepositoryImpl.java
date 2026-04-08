@@ -4,6 +4,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlightRepositoryImpl implements FlightRepository {
 
@@ -76,6 +77,51 @@ public class FlightRepositoryImpl implements FlightRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return flights;
+    }
+
+    @Override
+    public List<Flight> findAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        // Генеруємо ?, ?, ?, ...
+        String placeholders = ids.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(", "));
+
+        String sql = "SELECT * FROM flights WHERE id IN (" + placeholders + ")";
+
+        List<Flight> flights = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            // Підставляємо значення
+            for (int i = 0; i < ids.size(); i++) {
+                preparedStatement.setLong(i + 1, ids.get(i));
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    long id = resultSet.getLong("id");
+                    String departureCity = resultSet.getString("departure_city");
+                    String arrivalCity = resultSet.getString("arrival_city");
+                    LocalDateTime departureTime = resultSet.getObject("departure_time", LocalDateTime.class);
+                    int totalSeats = resultSet.getInt("total_seats");
+                    int availableSeats = resultSet.getInt("available_seats");
+
+                    Flight flight = new Flight(id, departureCity, arrivalCity, departureTime, totalSeats);
+                    flight.setAvailableSeats(availableSeats);
+
+                    flights.add(flight);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Помилка при batch отриманні рейсів", e);
+        }
+
         return flights;
     }
 

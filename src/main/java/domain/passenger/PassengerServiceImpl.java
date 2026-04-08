@@ -37,6 +37,19 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    public List<Passenger> findAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> uniqueIds = ids.stream()
+                .distinct()
+                .toList();
+
+        return passengerRepository.findAllByIds(uniqueIds);
+    }
+
+    @Override
     public List<Passenger> getAll() {
         return passengerRepository.getAll();
     }

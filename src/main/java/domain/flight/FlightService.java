@@ -1,5 +1,6 @@
 package domain.flight;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface FlightService {
@@ -12,4 +13,6 @@ public interface FlightService {
     void reserveSeats(Long flightId, int seatsToBook);
 
     void returnSeats(Long flightId, int seatsToBook);
+
+    List<Flight> findAllByIds(List<Long> ids);
 }

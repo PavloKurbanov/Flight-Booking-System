@@ -25,9 +25,9 @@ void main() {
         FlightService flightService = new FlightServiceImpl(flightRepository);
         PassengerService passengerService = new PassengerServiceImpl(passengerRepository);
         TicketService ticketService = new TicketServiceImpl(flightService, passengerService, ticketRepository, connection);
-        TicketMapper ticketMapper = new TicketMapper(flightService, passengerService);
+        TicketViewService ticketViewService = new TicketViewService(ticketService, flightService, passengerService);
 
-        MainMenu mainMenu = new MainMenu(inputOutput, flightService, passengerService, ticketService, ticketMapper);
+        MainMenu mainMenu = new MainMenu(inputOutput, flightService, passengerService, ticketService, ticketViewService);
         mainMenu.showMenu();
     } catch (SQLException e) {
         throw new RuntimeException("Помилка з'єднання з базою", e);

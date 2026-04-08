@@ -3,6 +3,7 @@ package domain.passenger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PassengerRepositoryImpl implements PassengerRepository {
     private final Connection connection;
@@ -87,6 +88,44 @@ public class PassengerRepositoryImpl implements PassengerRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Passenger> findAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        String placeholders = ids.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(", "));
+
+        String sql = "SELECT * FROM passengers WHERE id IN (" + placeholders + ")";
+
+        List<Passenger> passengers = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            for (int i = 0; i < ids.size(); i++) {
+                preparedStatement.setLong(i + 1, ids.get(i));
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    long id = resultSet.getLong("id");
+                    String firstName = resultSet.getString("first_name");
+                    String lastName = resultSet.getString("last_name");
+
+                    Passenger passenger = new Passenger(id, firstName, lastName);
+                    passengers.add(passenger);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Помилка при batch отриманні пасажирів", e);
+        }
+
+        return passengers;
     }
 
     private void insert(Passenger passenger) {

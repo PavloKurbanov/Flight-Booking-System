@@ -2,10 +2,7 @@ package ui.command;
 
 import domain.passenger.Passenger;
 import domain.passenger.PassengerService;
-import domain.ticket.Ticket;
-import domain.ticket.TicketDTO;
-import domain.ticket.TicketMapper;
-import domain.ticket.TicketService;
+import domain.ticket.*;
 import framework.menuEngine.menuValidation.MenuItem;
 import infrastructure.io.InputOutput;
 import infrastructure.util.TicketPrinter;

@@ -26,25 +26,52 @@ public class TicketViewService {
     }
 
     /**
-     * Отримує всі квитки для UI без N+1 проблеми.
-     *
-     * N+1 проблема: якщо ми для кожного квитка окремо будемо запитувати
-     * Flight та Passenger, то для N квитків отримаємо N+1 запитів:
-     * 1 запит на всі квитки + N запитів на Flights + N запитів на Passengers.
-     * Тут ми робимо batch fetch, щоб обмежити кількість запитів до мінімуму.
+     * Отримує всі квитки для UI.
      */
     public List<TicketDTO> getAllTicketsForView() {
-        // 1️⃣ Отримуємо всі квитки з бази одним запитом
-        // Це "1" у N+1: один запит для всіх квитків
         List<Ticket> tickets = ticketService.getAll();
 
         if (tickets.isEmpty()) {
-            // Якщо квитків немає, повертаємо порожній список
             return List.of();
         }
 
-        // 2️⃣ Витягуємо всі унікальні FlightId та PassengerId
-        // Використовуємо distinct(), щоб уникнути повторних запитів для однакових IDs
+        return convertToDTOs(tickets);
+    }
+
+    /**
+     * Отримує квитки конкретного пасажира для UI.
+     */
+    public List<TicketDTO> getPassengerTicketsForView(String firstName, String lastName) {
+        List<Ticket> tickets = ticketService.getTicketsByPassenger(firstName, lastName);
+
+        if (tickets.isEmpty()) {
+            return List.of();
+        }
+
+        return convertToDTOs(tickets);
+    }
+
+    /**
+     * Отримує квитки конкретного рейсу для UI.
+     */
+    public List<TicketDTO> getFlightTicketsForView(Long flightId) {
+        List<Ticket> tickets = ticketService.getTicketsByFlight(flightId);
+
+        if (tickets.isEmpty()) {
+            return List.of();
+        }
+
+        return convertToDTOs(tickets);
+    }
+
+    /**
+     * ПРИВАТНИЙ МЕТОД-ПОМІЧНИК (Helper)
+     * Єдине місце в системі, яке відповідає за мапінг Ticket -> TicketDTO
+     * та вирішення проблеми N+1.
+     * Складність: O(N) по пам'яті та часу, але всього 3 запити до "БД" (Batch Fetching).
+     */
+    private List<TicketDTO> convertToDTOs(List<Ticket> tickets) {
+        // 1. Витягуємо всі унікальні ID для Batch Fetching
         List<Long> flightIds = tickets.stream()
                 .map(Ticket::getFlightId)
                 .distinct()
@@ -55,36 +82,28 @@ public class TicketViewService {
                 .distinct()
                 .toList();
 
-        // 3️⃣ Отримуємо всі Flights та Passengers одним запитом
-        // Тобто batch fetch: замість N окремих запитів, робимо 1 запит для всіх Flight і 1 для всіх Passenger
+        // 2. Отримуємо всі Flights та Passengers одним масовим запитом
         Map<Long, Flight> flightMap = flightService.findAllByIds(flightIds)
                 .stream()
-                // Перетворюємо список Flight у Map для швидкого доступу по ID
                 .collect(Collectors.toMap(Flight::getId, f -> f));
 
         Map<Long, Passenger> passengerMap = passengerService.findAllByIds(passengerIds)
                 .stream()
-                // Перетворюємо список Passenger у Map для швидкого доступу по ID
                 .collect(Collectors.toMap(Passenger::getId, p -> p));
 
-        // 4️⃣ Формуємо DTO (Data Transfer Object) для UI
-        // DTO містить тільки ті дані, які потрібні для відображення, без зайвих деталей
+        // 3. Формуємо DTO для UI
         return tickets.stream()
                 .map(ticket -> {
-                    // Витягуємо Flight та Passenger з мапи по ID
                     Flight flight = flightMap.get(ticket.getFlightId());
                     Passenger passenger = passengerMap.get(ticket.getPassengerId());
 
-                    // Якщо Passenger не знайдено (null), виводимо "Невідомий пасажир"
                     String fullName = (passenger != null)
                             ? passenger.getFirstName() + " " + passenger.getLastName()
                             : "Невідомий пасажир";
 
-                    // Якщо Flight не знайдено (null), використовуємо "N/A" для міст
                     String departureCity = (flight != null) ? flight.getDepartureCity() : "N/A";
                     String arrivalCity = (flight != null) ? flight.getArrivalCity() : "N/A";
 
-                    // Створюємо DTO для одного квитка
                     return new TicketDTO(
                             ticket.getId(),
                             departureCity,
@@ -92,6 +111,6 @@ public class TicketViewService {
                             fullName
                     );
                 })
-                .toList(); // Перетворюємо Stream<TicketDTO> у List<TicketDTO>
+                .toList();
     }
 }

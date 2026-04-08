@@ -10,4 +10,6 @@ public interface PassengerService {
     Passenger findByFistAndLastName(String firstName, String LastName);
 
     List<Passenger> getAll();
+
+    List<Passenger> findAllByIds(List<Long> ids);
 }

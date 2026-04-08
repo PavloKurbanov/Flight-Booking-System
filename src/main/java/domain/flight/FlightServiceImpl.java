@@ -50,12 +50,12 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public void reserveSeats(Long flightId, int seatsToBook) {
-        if(seatsToBook <= 0){
+        if (seatsToBook <= 0) {
             throw new IllegalArgumentException("Кількість місць має бути більшою за нуль!");
         }
 
         Flight flight = findById(flightId);
-        if(flight == null){
+        if (flight == null) {
             throw new IllegalArgumentException("Не має такого ID!");
         }
 
@@ -71,7 +71,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public void returnSeats(Long flightId, int seatsToBook) {
         Flight flight = findById(flightId);
-        if(flight == null){
+        if (flight == null) {
             throw new IllegalArgumentException("Не має такого ID!");
         }
 
@@ -80,6 +80,19 @@ public class FlightServiceImpl implements FlightService {
         }
         flight.setAvailableSeats(flight.getAvailableSeats() + seatsToBook);
         flightRepository.save(flight);
+    }
+
+    @Override
+    public List<Flight> findAllByIds(List<Long> flightIds) {
+        if (flightIds == null || flightIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> uniqueIds = flightIds.stream()
+                .distinct()
+                .toList();
+
+        return flightRepository.findAllByIds(uniqueIds);
     }
 
     private boolean isSameRouteAndTime(Flight existingFlight, Flight newFlight) {
