@@ -39,3 +39,22 @@ public class TicketMapper {
                 }).toList();
     }
 }
+
+// public class TicketMapper {
+
+//     public TicketDTO toDTO(Ticket ticket, Flight flight, Passenger passenger) {
+//         String fullName = (passenger != null)
+//                 ? passenger.getFirstName() + " " + passenger.getLastName()
+//                 : "Невідомий пасажир";
+
+//         String departure = (flight != null) ? flight.getDepartureCity() : "N/A";
+//         String arrival = (flight != null) ? flight.getArrivalCity() : "N/A";
+
+//         return new TicketDTO(
+//                 ticket.getId(),
+//                 departure,
+//                 arrival,
+//                 fullName
+//         );
+//     }
+// }
