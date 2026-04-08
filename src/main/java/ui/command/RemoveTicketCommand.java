@@ -34,7 +34,8 @@ public class RemoveTicketCommand implements Command {
             System.out.println("Не має проданих квитків!");
             return;
         }
-        List<TicketDTO> dtoList = ticketMapper.toDTOList(ticketServiceAll);
+        
+        List<TicketDTO> dtoList = ticketViewService.getAllTicketsForView();
         TicketPrinter.printTicket(dtoList);
 
         Long ticketId = inputOutput.readLong("Введіть ID тікета: ");
