@@ -1,16 +1,12 @@
 package domain.passenger;
 
-import java.sql.*;
-import java.util.ArrayList;
+import infrastructure.util.ConnectionManager;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PassengerRepositoryImpl implements PassengerRepository {
-    private final Connection connection;
-
-    public PassengerRepositoryImpl(Connection connection) {
-        this.connection = connection;
-    }
 
     @Override
     public void save(Passenger passenger) {
@@ -18,75 +14,42 @@ public class PassengerRepositoryImpl implements PassengerRepository {
             throw new IllegalArgumentException("Пасажир не може бути null!");
         }
 
-        if (passenger.getId() == null) {
-            insert(passenger);
-        } else {
-            update(passenger);
+        try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
+            entityManager.getTransaction().begin();
+            entityManager.merge(passenger);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка збереження пасажира", e);
         }
     }
 
     @Override
     public Passenger findById(Long aLong) {
-        String sql = "SELECT * FROM passengers WHERE id = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, aLong);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    long id = resultSet.getLong("id");
-                    String firstName = resultSet.getString("first_name");
-                    String lastName = resultSet.getString("last_name");
-
-                    return new Passenger(id, firstName, lastName);
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
+            return entityManager.find(Passenger.class, aLong);
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка при пошуку за ID: " + aLong, e);
         }
     }
 
     @Override
     public List<Passenger> getAll() {
-        List<Passenger> passengers = new ArrayList<>();
-        String sql = "SELECT * FROM passengers";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                long id = resultSet.getLong("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-
-                passengers.add(new Passenger(id, firstName, lastName));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
+            return entityManager.createQuery("SELECT p FROM Passenger p", Passenger.class).getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка при отриманні всіх пасажирів", e);
         }
-        return passengers;
     }
 
     @Override
     public Passenger findByFirstNameAndLastName(String firstName, String lastName) {
-        String sql = "SELECT * FROM passengers WHERE first_name = ? AND last_name = ?";
-
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                if(resultSet.next()) {
-                    long id = resultSet.getLong("id");
-                    String firsName1 = resultSet.getString("first_name");
-                    String lastName1 = resultSet.getString("last_name");
-
-                    return new Passenger(id, firsName1, lastName1);
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
+            return entityManager.createQuery("Select p from Passenger p where p.firstName = :firstName and p.lastName = :lastName", Passenger.class)
+                    .setParameter("firstName", firstName).setParameter("lastName", lastName).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка пошуку пасажира " + firstName + " " + lastName, e);
         }
     }
 
@@ -96,77 +59,10 @@ public class PassengerRepositoryImpl implements PassengerRepository {
             return List.of();
         }
 
-        String placeholders = ids.stream()
-                .map(id -> "?")
-                .collect(Collectors.joining(", "));
-
-        String sql = "SELECT * FROM passengers WHERE id IN (" + placeholders + ")";
-
-        List<Passenger> passengers = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            for (int i = 0; i < ids.size(); i++) {
-                preparedStatement.setLong(i + 1, ids.get(i));
-            }
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    long id = resultSet.getLong("id");
-                    String firstName = resultSet.getString("first_name");
-                    String lastName = resultSet.getString("last_name");
-
-                    Passenger passenger = new Passenger(id, firstName, lastName);
-                    passengers.add(passenger);
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Помилка при batch отриманні пасажирів", e);
-        }
-
-        return passengers;
-    }
-
-    private void insert(Passenger passenger) {
-        String sql = "INSERT INTO passengers (first_name, last_name) VALUES (?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, passenger.getFirstName());
-            preparedStatement.setString(2, passenger.getLastName());
-
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new SQLException("Збереження пасажира не вдалося, жодного рядка не додано.");
-            }
-
-            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
-                if (keys.next()) {
-                    passenger.setId(keys.getLong(1));
-                }
-            }
-        } catch (
-                SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void update(Passenger passenger) {
-        String sql = "UPDATE passengers SET first_name = ?, last_name = ? WHERE id = ?";
-
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, passenger.getFirstName());
-            preparedStatement.setString(2, passenger.getLastName());
-            preparedStatement.setLong(3, passenger.getId());
-
-            int executed = preparedStatement.executeUpdate();
-
-            if(executed == 0){
-                throw new SQLException("Не вдалось оновити дані пасажира");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (EntityManager entityManager = ConnectionManager.getEntityManager()) {
+            return entityManager.createQuery("Select p from Passenger p where p.id in :ids", Passenger.class).setParameter("ids", ids).getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Помилка при отриманні рейсів за IDs", e);
         }
     }
 }

@@ -1,52 +1,62 @@
 package domain.ticket;
 
-import framework.validatorEngine.validatorAnnotation.NotNull;
+import domain.flight.Flight;
+import domain.passenger.Passenger;
+import jakarta.persistence.*;
 
 import java.util.Objects;
-
-public class Ticket{
+@Entity
+@Table(name = "tickets")
+public class Ticket {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Введіть коректне ID пасажира!")
-    private final Long passengerId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
 
-    @NotNull(message = "Введіть коректне ID літака!")
-    private final Long flightId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "passenger_id")
+    private Passenger passenger;
 
+    public Ticket() {}
 
-    public Ticket(Long id, Long passengerId, Long flightId) {
-        this.id = id;
-        this.passengerId = passengerId;
-        this.flightId = flightId;
-
+    public Ticket(Flight flight, Passenger passenger) {
+        this.flight = flight;
+        this.passenger = passenger;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public Long getPassengerId() {
-        return passengerId;
+    public Passenger getPassenger() {
+        return passenger;
     }
 
-    public Long getFlightId() {
-        return flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+    }
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return Objects.equals(passengerId, ticket.passengerId) && Objects.equals(flightId, ticket.flightId);
+        return Objects.equals(id, ticket.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(passengerId, flightId);
+        return Objects.hash(id);
     }
 }

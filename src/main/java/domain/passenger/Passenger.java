@@ -1,20 +1,37 @@
 package domain.passenger;
 
+import domain.ticket.Ticket;
 import framework.validatorEngine.validatorAnnotation.NotBlank;
-import framework.validatorEngine.validatorAnnotation.NotNull;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "passengers")
 public class Passenger implements Comparable<Passenger> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @NotBlank(message = "Введіть коректне ім'я!")
-    private final String firstName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    @NotNull
     @NotBlank(message = "Введіть коректне прізвище!")
-    private final String lastName;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    public Passenger() {}
+
+    public Passenger(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Passenger(Long id, String firstName, String lastName) {
         this.id = id;
@@ -34,29 +51,38 @@ public class Passenger implements Comparable<Passenger> {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passenger passenger = (Passenger) o;
-        return Objects.equals(id, passenger.id) && Objects.equals(firstName, passenger.firstName) && Objects.equals(lastName, passenger.lastName);
+        return Objects.equals(id, passenger.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName);
+        return Objects.hash(id);
     }
 
     @Override
     public int compareTo(Passenger o) {
-        int lastNameComper = this.lastName.compareTo(o.lastName);
-        if (lastNameComper != 0) {
-            return lastNameComper;
+        if (o == null) return 1;
+        int lastNameCompare = this.lastName.compareTo(o.lastName);
+        if (lastNameCompare != 0) {
+            return lastNameCompare;
         }
-
         return this.firstName.compareTo(o.firstName);
     }
 }

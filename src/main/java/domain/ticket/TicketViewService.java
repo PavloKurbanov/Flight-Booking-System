@@ -1,28 +1,18 @@
 package domain.ticket;
 
 import domain.flight.Flight;
-import domain.flight.FlightService;
 import domain.passenger.Passenger;
-import domain.passenger.PassengerService;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TicketViewService {
 
     private final TicketService ticketService;
-    private final FlightService flightService;
-    private final PassengerService passengerService;
 
     public TicketViewService(
-            TicketService ticketService,
-            FlightService flightService,
-            PassengerService passengerService
+            TicketService ticketService
     ) {
         this.ticketService = ticketService;
-        this.flightService = flightService;
-        this.passengerService = passengerService;
     }
 
     /**
@@ -71,31 +61,10 @@ public class TicketViewService {
      * Складність: O(N) по пам'яті та часу, але всього 3 запити до "БД" (Batch Fetching).
      */
     private List<TicketDTO> convertToDTOs(List<Ticket> tickets) {
-        // 1. Витягуємо всі унікальні ID для Batch Fetching
-        List<Long> flightIds = tickets.stream()
-                .map(Ticket::getFlightId)
-                .distinct()
-                .toList();
-
-        List<Long> passengerIds = tickets.stream()
-                .map(Ticket::getPassengerId)
-                .distinct()
-                .toList();
-
-        // 2. Отримуємо всі Flights та Passengers одним масовим запитом
-        Map<Long, Flight> flightMap = flightService.findAllByIds(flightIds)
-                .stream()
-                .collect(Collectors.toMap(Flight::getId, f -> f));
-
-        Map<Long, Passenger> passengerMap = passengerService.findAllByIds(passengerIds)
-                .stream()
-                .collect(Collectors.toMap(Passenger::getId, p -> p));
-
-        // 3. Формуємо DTO для UI
         return tickets.stream()
                 .map(ticket -> {
-                    Flight flight = flightMap.get(ticket.getFlightId());
-                    Passenger passenger = passengerMap.get(ticket.getPassengerId());
+                    Flight flight = ticket.getFlight();
+                    Passenger passenger = ticket.getPassenger();
 
                     String fullName = (passenger != null)
                             ? passenger.getFirstName() + " " + passenger.getLastName()

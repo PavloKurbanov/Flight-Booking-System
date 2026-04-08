@@ -1,28 +1,42 @@
 package domain.flight;
 
+import domain.ticket.Ticket;
 import framework.validatorEngine.validatorAnnotation.NotBlank;
-import framework.validatorEngine.validatorAnnotation.NotNull;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "flights")
 public class Flight implements Comparable<Flight> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @NotBlank(message = "Введіть коректне місто відправлення!")
-    private final String departureCity;
+    @Column(name = "departure_city", nullable = false)
+    private String departureCity;
 
-    @NotNull
     @NotBlank(message = "Введіть коректне місто прибуття!")
-    private final String arrivalCity;
+    @Column(name = "arrival_city", nullable = false)
+    private String arrivalCity;
 
-    @NotNull
-    private final LocalDateTime departureTime;
+    @Column(name = "departure_time", nullable = false)
+    private LocalDateTime departureTime;
 
-    @NotNull
-    private final Integer totalSeats;
+    @Column(name = "total_seats", nullable = false)
+    private Integer totalSeats;
+
+    @Column(name = "available_seats", nullable = false)
     private Integer availableSeats;
+
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
+
 
     public Flight(Long id, String departureCity, String arrivalCity, LocalDateTime departureTime, Integer totalSeats) {
         this.id = id;
@@ -32,6 +46,8 @@ public class Flight implements Comparable<Flight> {
         this.totalSeats = totalSeats;
         this.availableSeats = totalSeats;
     }
+
+    public Flight() {}
 
     public Long getId() {
         return id;
@@ -45,16 +61,32 @@ public class Flight implements Comparable<Flight> {
         return departureCity;
     }
 
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
     public String getArrivalCity() {
         return arrivalCity;
+    }
+
+    public void setArrivalCity(String arrivalCity) {
+        this.arrivalCity = arrivalCity;
     }
 
     public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
     public Integer getTotalSeats() {
         return totalSeats;
+    }
+
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
     }
 
     public Integer getAvailableSeats() {

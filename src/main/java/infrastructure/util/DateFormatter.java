@@ -1,6 +1,5 @@
 package infrastructure.util;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -10,10 +9,6 @@ public class DateFormatter {
 
     public static String formatLocalDateTime(LocalDateTime date) {
         return (date == null) ? "N/A" : date.format(FORMATTER);
-    }
-
-    public static LocalDate parseLocalDate(String text) throws DateTimeParseException {
-        return LocalDate.parse(text, FORMATTER);
     }
 
     public static LocalDateTime parseLocalDateTime(String text) throws DateTimeParseException {
